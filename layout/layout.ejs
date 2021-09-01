@@ -14,7 +14,21 @@ var banner_video = theme.index.banner_video
 <%- partial('_partial/head') %>
 
 <body>
-
+	<!--
+	<div id="test_id_visitor_"> 
+	
+	</div>
+	
+	<script>
+	path = window.location.pathname
+	console.log(path)
+	video_html_res = "当前页阅读量为<span id='" + path + "' class='waline-visitor-count'></span>次。"
+	console.log(video_html_res)
+	document.getElementById("test_id_visitor").innerHTML = video_html_res;
+	</script>
+	-->
+	
+	
   <header style="height: <%- banner_img_height %>vh;">
     <%- partial('_partial/nav') %>
 		<div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
