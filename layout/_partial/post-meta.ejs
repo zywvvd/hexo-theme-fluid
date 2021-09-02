@@ -42,6 +42,21 @@
       <span id="leancloud-page-views-container" class="post-meta" style="display: none">
         <i class="iconfont icon-eye" aria-hidden="true"></i>
         <%- views_texts[0] %><span id="leancloud-page-views"></span><%- views_texts[1] %>
+
+		<span id="waline-comment-count-container" style="display: none">
+			&nbsp
+			<i class="iconfont icon-comment" aria-hidden="true"></i>
+			<span id="test_id_visitor"></span>
+		</span>
+		
+		<script>
+			path = window.location.pathname
+			console.log(path)
+			video_html_res = "<span id='" + path + "' class='waline-comment-count'></span>&nbsp评论"
+			console.log(video_html_res)
+			document.getElementById("test_id_visitor").innerHTML = video_html_res;
+		</script>
+
       </span>
     <% } else if (theme.post.meta.views.source === 'busuanzi')  { %>
       <!-- 不蒜子统计文章PV -->
