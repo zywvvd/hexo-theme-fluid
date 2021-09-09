@@ -8,7 +8,8 @@ var banner_video = theme.index.banner_video
 %>
 
 <!DOCTYPE html>
-<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+
+<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme=${colorSchema}` : '' %>>
 <script type="text/javascript" src="/vvd_js/jquery.js"></script>
 
 <%- partial('_partial/head') %>
