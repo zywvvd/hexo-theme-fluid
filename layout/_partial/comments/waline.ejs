@@ -11,10 +11,14 @@
           }
         )
         new Waline(options);
-		
+
 		wa_ccc = "waline-comment-count-container"
 		var i=document.getElementById(wa_ccc)
 		i.style.display = 'inline'
+
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          Fluid.plugins.initFancyBox('#waline .vcontent img:not(.vemoji)');
+        })
 
       });
     });
