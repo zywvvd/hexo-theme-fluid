@@ -18,17 +18,17 @@ var banner_video = theme.index.banner_video
 		
   <header style="height: <%- banner_img_height %>vh;">
     <%- partial('_partial/nav') %>
+	<% if(banner_video){ %>
+
 		<div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
 			 style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
 			   background-size: cover;">
 
       <div class="full-bg-img" >
-
-		<% if(banner_video){ %>
 		<div id="banner_video_insert">
-		</div>
+		</div>	
 		<script>
-						
+			
 			var ua = navigator.userAgent;
 			var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
 				isIphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
@@ -58,11 +58,16 @@ var banner_video = theme.index.banner_video
 					var seed = Math.random()
 					index = Math.floor(seed * video_list_length)
 					
-					video_url = data[index]
+					video_url = data[index][0]
+					pre_show_image_url = data[index][1]
 					video_html_res = "<video id='video_item' style='position: absolute;' muted='muted' src=" + video_url + " autoplay='autoplay' loop='loop'></video>"
 
 					document.getElementById("banner_video_insert").innerHTML = video_html_res;
 					set_video_attr('video_item')
+
+					document.getElementById("banner").style["background"] = "asdfasdf"
+					console.log(document.getElementById("banner").style.background )
+					
 				}
 
 			});
@@ -75,7 +80,6 @@ var banner_video = theme.index.banner_video
 			</script>
 
 		<% } %>
-
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
           <div class="page-header text-center fade-in-up">
             <span class="h2" id="subtitle" title="<%= subtitle %>">
