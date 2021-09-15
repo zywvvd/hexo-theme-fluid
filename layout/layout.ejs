@@ -60,14 +60,15 @@ var banner_video = theme.index.banner_video
 					
 					video_url = data[index][0]
 					pre_show_image_url = data[index][1]
+					
+					banner_obj = document.getElementById("banner")
+					banner_obj.style.cssText = "background: url('" + pre_show_image_url + "') no-repeat; background-size: cover;"
+
 					video_html_res = "<video id='video_item' style='position: absolute;' muted='muted' src=" + video_url + " autoplay='autoplay' loop='loop'></video>"
 
 					document.getElementById("banner_video_insert").innerHTML = video_html_res;
 					set_video_attr('video_item')
 
-					document.getElementById("banner").style["background"] = "asdfasdf"
-					console.log(document.getElementById("banner").style.background )
-					
 				}
 
 			});
