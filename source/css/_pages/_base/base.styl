@@ -34,6 +34,7 @@ code
 
 table
   font-size inherit
+  color var(--post-text-color)
 
 img[lazyload]
   object-fit cover
@@ -46,3 +47,17 @@ img[lazyload]
 
 *[align="right"]
   text-align right
+
+::-webkit-scrollbar
+  width 6px
+  height 4px
+
+::-webkit-scrollbar-thumb
+  background-color var(--scrollbar-color)
+  border-radius 6px
+
+  &:hover
+    background-color var(--scrollbar-hover-color)
+
+::-webkit-scrollbar-corner
+  background-color transparent
