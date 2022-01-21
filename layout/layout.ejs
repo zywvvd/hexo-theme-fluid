@@ -15,7 +15,8 @@ var banner_video = theme.index.banner_video
 <%- partial('_partial/head') %>
 
 <body>
-		
+	<div id="banner_video_insert">
+	</div>	
   <header style="height: <%- banner_img_height %>vh;">
     <%- partial('_partial/nav') %>
 	
@@ -24,8 +25,7 @@ var banner_video = theme.index.banner_video
 		background-size: cover;">
 
 		<div class="full-bg-img" >
-			<div id="banner_video_insert">
-			</div>	
+
 			<% if(banner_video){ %>
 				<script>
 					var ua = navigator.userAgent;
@@ -60,7 +60,7 @@ var banner_video = theme.index.banner_video
 							banner_obj = document.getElementById("banner")
 							banner_obj.style.cssText = "background: url('" + pre_show_image_url + "') no-repeat; background-size: cover;"
 
-							video_html_res = "<video id='video_item' style='position: absolute;' muted='muted' src=" + video_url + " autoplay='autoplay' loop='loop'></video>"
+							video_html_res = "<video id='video_item' style='position: fixed; z-index: -999;'  muted='muted' src=" + video_url + " autoplay='autoplay' loop='loop'></video>"
 
 							document.getElementById("banner_video_insert").innerHTML = video_html_res;
 							set_video_attr('video_item')
