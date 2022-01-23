@@ -15,14 +15,18 @@ var banner_video = theme.index.banner_video
 <%- partial('_partial/head') %>
 
 <body>
-	<div id="banner_video_insert">
-	</div>	
+	<div>
+		<div class='real_mask'></div>
+		<div id="banner_video_insert">
+		</div>	
+		<div id='vvd_banner_img'>
+		</div>
+	</div>
+	<div id="banner"></div>
   <header style="height: <%- banner_img_height %>vh;">
     <%- partial('_partial/nav') %>
 	
-	<div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
-		style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
-		background-size: cover;">
+	<div class="banner" id='banner' >
 
 		<div class="full-bg-img" >
 
@@ -35,8 +39,9 @@ var banner_video = theme.index.banner_video
 						isMobile = isIphone || isAndroid;
 
 					function set_video_attr(id){
-						var height = document.body.children[0].clientHeight
-						var width = document.body.children[0].clientWidth
+
+						var height = document.body.clientHeight
+						var width = document.body.clientWidth
 						var video_item = document.getElementById(id);
 
 						if (height / width < 0.56){
@@ -60,13 +65,17 @@ var banner_video = theme.index.banner_video
 							banner_obj = document.getElementById("banner")
 							banner_obj.style.cssText = "background: url('" + pre_show_image_url + "') no-repeat; background-size: cover;"
 
-							video_html_res = "<video id='video_item' style='position: fixed; z-index: -999;'  muted='muted' src=" + video_url + " autoplay='autoplay' loop='loop'></video>"
+							vvd_banner_obj = document.getElementById("vvd_banner_img")
 
+							vvd_banner_content = "<img id='banner_img_item' src='" + pre_show_image_url + "' style='height: 100%; position: fixed; z-index: -999'>"
+							vvd_banner_obj.innerHTML = vvd_banner_content
+
+							video_html_res = "<video id='video_item' style='position: fixed; z-index: -888;'  muted='muted' src=" + video_url + " autoplay='autoplay' loop='loop'></video>"
 							document.getElementById("banner_video_insert").innerHTML = video_html_res;
+
 							set_video_attr('video_item')
-
+							set_video_attr('banner_img_item')
 						}
-
 					});
 
 					if (!isMobile){
@@ -77,7 +86,7 @@ var banner_video = theme.index.banner_video
 				</script>
 			<% } %>
 
-			<div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+			<div class="mask flex-center">
 			  <div class="page-header text-center fade-in-up">
 				<span class="h2" id="subtitle" title="<%= subtitle %>">
 				  <% if(!theme.fun_features.typing.enable) { %>
