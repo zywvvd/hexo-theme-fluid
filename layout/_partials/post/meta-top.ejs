@@ -57,6 +57,41 @@
           <%- views_texts[0] %><span id="busuanzi_value_page_pv"></span><%- views_texts[1] %>
         </span>
         <% import_js(theme.static_prefix.busuanzi, 'busuanzi.pure.mini.js', 'defer') %>
+      <% } else if (theme.post.meta.views.source === 'vvdpostpvuv')  { %>
+        <span id="vvdpost_container_page_pvuv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <%- views_texts[0] %><span id="vvdpost_value_page_pv">0</span><%- views_texts[1] + '&nbsp&nbsp' %>
+		  <i class="iconfont icon-users" aria-hidden="true"></i>
+		  <%- views_texts[0] %><span id="vvdpost_value_page_uv">0</span><%- ' 人' %>
+        </span>
+
+		<script>
+			console.log(window.location.pathname)
+			var httpRequest = new XMLHttpRequest();
+			httpRequest.open('POST', 'http://101.43.39.125:6873/poststats', true);
+			httpRequest.setRequestHeader("Content-type","application/json");
+			httpRequest.send(JSON.stringify(window.location.pathname));
+			httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+				if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+					var json = httpRequest.responseText;//获取到服务端返回的数据
+					var obj = JSON.parse(json);
+					console.log(obj.pv);
+					var pvCtn = document.querySelector('#vvdpost_container_page_pvuv');
+					console.log(pvCtn);
+					if (pvCtn) {
+						var pv_ele = document.querySelector('#vvdpost_value_page_pv');
+						console.log(pv_ele);
+						var uv_ele = document.querySelector('#vvdpost_value_page_uv');
+						console.log(uv_ele);
+						if (uv_ele && uv_ele) {
+							pv_ele.innerText = obj.pv;
+							uv_ele.innerText = obj.uv;
+							pvCtn.style.display = 'inline';
+							}
+						}
+					}
+			};
+		</script>
       <% } %>
     <% } %>
   </div>
