@@ -68,7 +68,7 @@
 		<script>
 			console.log(window.location.pathname)
 			var httpRequest = new XMLHttpRequest();
-			httpRequest.open('POST', 'http://101.43.39.125:6873/poststats', true);
+			httpRequest.open('POST', 'https://101.43.39.125:6101/poststats', true);
 			httpRequest.setRequestHeader("Content-type","application/json");
 			httpRequest.send(JSON.stringify(window.location.pathname));
 			httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
