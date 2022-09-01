@@ -63,6 +63,8 @@
           <%- views_texts[0] %><span id="vvdpost_value_page_pv">0</span><%- views_texts[1] + '&nbsp&nbsp' %>
 		  <i class="iconfont icon-users" aria-hidden="true"></i>
 		  <%- views_texts[0] %><span id="vvdpost_value_page_uv">0</span><%- ' 人' %>
+		  <i class="iconfont icon-users" aria-hidden="true"></i>
+		  <%- views_texts[0] %><span id="vvdpost_value_page_cn">0</span><%- ' 条' %>
         </span>
 
 		<script>
@@ -83,9 +85,12 @@
 						console.log(pv_ele);
 						var uv_ele = document.querySelector('#vvdpost_value_page_uv');
 						console.log(uv_ele);
+						var cn_ele = document.querySelector('#vvdpost_value_page_cn');
+						console.log(cn_ele);
 						if (uv_ele && uv_ele) {
 							pv_ele.innerText = obj.pv;
 							uv_ele.innerText = obj.uv;
+							cn_ele.innerText = obj.cn;
 							pvCtn.style.display = 'inline';
 							}
 						}
