@@ -20,11 +20,33 @@ page.comment = theme.links.comments.type
   height: 60vh;
 }
 
-.{
-  ;
+.earth_title{
+  height: 10vh;
+  color: #fff;
+  text-align: center;
 }
 
+.earth_word{
+  font-size: 2.15rem;
+  text-align: center;
+  vertical-align: center;
+  margin: 10px;
+}
+
+.footer-inner {
+    padding: 0rem 0 1rem 0;
+    text-align: center;
+}
 </style>
+
+
+
+<div class="earth_title">
+	<div class="earth_word">
+		30天内的来访者
+	</div>
+	〇&nbsp 历史来访者 &nbsp&nbsp&nbsp  <span style="color:#F33">〇</span>&nbsp 当前来访者
+</div>
 
 <div id='fatherobj3'>
     <canvas id='quakeCanvas3'></canvas>
@@ -42,13 +64,29 @@ page.comment = theme.links.comments.type
   var header_obj = document.getElementsByClassName('header-inner');
   header_obj = header_obj[0];
   
-  header_obj.style.cssText = "height: 6vh;";
+  header_obj.style.cssText = "height: 9vh;";
   var temp_board_obj = document.getElementById('board');
-  temp_board_obj.style.cssText = "background-color: rgba(0,0,0,0);box-shadow:0 12px 15px 0 rgb(0 0 0 / 0%), 0 17px 50px 0 rgb(0 0 0 / 0%);"
+  temp_board_obj.style.cssText = "background-color: rgba(0,0,0,0);box-shadow:0 12px 15px 0 rgb(0 0 0 / 0%), 0 17px 50px 0 rgb(0 0 0 / 0%);width:100%;"
   
   var real_mask_obj = document.getElementsByClassName('real_mask');
   real_mask_obj = real_mask_obj[0]
   real_mask_obj.style.cssText = "background-color: rgba(0,0,0,0.8);z-index: -777;height: 100%;position: fixed;width: 100%;"
+  
+  var body_height = document.body.clientHeight;
+  var body_width = document.body.clientWidth;
+  body_width = body_width * 0.8;
+  
+  var real_container_obj = document.getElementsByClassName('container');
+  for (var i = 0; i < real_container_obj.length; i++) {
+    var temp = real_container_obj[i];
+	temp.style.cssText = "max-width:" + body_width.toString() + "px;";
+  }
+ 
+  var real_col_obj = document.getElementsByClassName('col-md-10');
+  for (var i = 0; i < real_col_obj.length; i++) {
+    var temp = real_col_obj[i];
+	temp.style.cssText = "max-width:100%;";
+  }
   
   // Create our Planetary.js planet and set some initial values;
   // we use several custom plugins, defined at the bottom of the file
@@ -196,7 +234,10 @@ page.comment = theme.links.comments.type
     var globe = null;
     var resize = function() {
       var width  = board_obj.offsetWidth;
-      var height = board_obj.offsetWidth;
+      //var height = board_obj.offsetWidth;
+	  //var width  = body_width;
+      var height = body_height;
+  
       globe.canvas.width = width;
       globe.canvas.height = height;
       globe.projection.translate([width / 2, height / 2]);
@@ -220,8 +261,10 @@ page.comment = theme.links.comments.type
     options = options || {};
     return function(planet) {
       planet.onInit(function() {
-        var width  = board_obj.offsetWidth;
-        var height = board_obj.offsetWidth;
+        //var width  = board_obj.offsetWidth;
+        //var height = board_obj.offsetWidth;
+        var width  = body_width;
+        var height = body_height;
         planet.projection.scale(Math.min(width, height) / 2.3);
       });
     };
