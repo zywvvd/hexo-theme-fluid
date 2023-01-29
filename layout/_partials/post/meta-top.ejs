@@ -77,16 +77,12 @@
 				if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
 					var json = httpRequest.responseText;//获取到服务端返回的数据
 					var obj = JSON.parse(json);
-					console.log(obj.pv);
 					var pvCtn = document.querySelector('#vvdpost_container_page_pvuv');
-					console.log(pvCtn);
 					if (pvCtn) {
 						var pv_ele = document.querySelector('#vvdpost_value_page_pv');
-						console.log(pv_ele);
 						var uv_ele = document.querySelector('#vvdpost_value_page_uv');
-						console.log(uv_ele);
 						var cn_ele = document.querySelector('#vvdpost_value_page_cn');
-						console.log(cn_ele);
+
 						if (uv_ele && uv_ele) {
 							pv_ele.innerText = obj.pv;
 							uv_ele.innerText = obj.uv;
