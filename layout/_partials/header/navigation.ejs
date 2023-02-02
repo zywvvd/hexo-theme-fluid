@@ -33,19 +33,23 @@
                   <% if (subText.indexOf('.title') !== -1) {
                     subText = subEach.key
                   } %>
+				  <div class = "umami--click--<%- subEach.event_key %>">
                   <a class="dropdown-item" href="<%= url_for(subEach.link) %>">
                     <%- subEach.icon ? '<i class="' + subEach.icon + '"></i>' : '' %>
                     <%- subText %>
                   </a>
+				  </div>
                 <% } %>
               </div>
             </li>
           <% } else { %>
             <li class="nav-item">
+			<div class = "umami--click--<%- each.event_key %>">
               <a class="nav-link" href="<%= url_for(each.link) %>">
                 <%- each.icon ? '<i class="' + each.icon + '"></i>' : '' %>
                 <%- text %>
               </a>
+			  </div>
             </li>
           <% } %>
         <% } %>
