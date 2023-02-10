@@ -7,63 +7,45 @@ page.banner_img_height = theme.links.banner_img_height
 page.banner_mask_alpha = theme.links.banner_mask_alpha
 page.comment = theme.links.comments.type
 %>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"> </script>
 
-小伙伴们
+<script>
+	var total_links=[];
+	<% for(const sub_item of theme.vvd_local_links.families || []) { %>
+		<% for(const link_info of sub_item.items || []) { %>
+			total_links.push('<%- link_info.link %>')
+		<% } %>
+	<% } %>
 
-<div class="row links">
-  <% for(const each of theme.links.items || []) { %>
+	 var s = md5('asdf'); 
+	 console.log('https://' + s) 
+	 console.log(total_links[1])
+	 console.log(md5(total_links[1]))
+ </script>
+ 
+import hashlib
+m = hashlib.md5('https://www.baidu.com'.encode(encoding='utf-8')).hexdigest()
 
-    <% if (!each.title || !each.link) continue %>
-    <div class="card col-lg-4 col-md-6 col-sm-12">
-      <a href="<%= url_for(each.link) %>" class="card-body hover-with-bg" target="_blank" rel="noopener">
-        <div class="card-content">
-          <% if (each.avatar || each.image) { %>
-            <div class="link-avatar my-auto">
-              <img src="<%= url_for(each.avatar || each.image) %>" alt="<%= each.title %>"
-                   onerror="this.onerror=null; this.src=this.srcset='<%= url_for(theme.links.onerror_avatar) %>'"/>
-            </div>
-          <% } %>
-          <div class="link-text">
-            <div class="link-title"><%- each.title %></div>
-            <div class="link-intro"><%- each.intro || '' %></div>
-          </div>
-        </div>
-      </a>
-    </div>
-  <% } %>
-</div>
-
-失联的同学
+站点地图
 
 <div class="row links">
-  <% for(const each of theme.lost_links.items || []) { %>
 
-    <% if (!each.title || !each.link) continue %>
-    <div class="card col-lg-4 col-md-6 col-sm-12">
-      <a href="<%= url_for(each.link) %>" class="card-body hover-with-bg" target="_blank" rel="noopener">
-        <div class="card-content">
-          <% if (each.avatar || each.image) { %>
-            <div class="link-avatar my-auto">
-              <img src="<%= url_for(each.avatar || each.image) %>" alt="<%= each.title %>"
-                   onerror="this.onerror=null; this.src=this.srcset='<%= url_for(theme.links.onerror_avatar) %>'"/>
-            </div>
-          <% } %>
-          <div class="link-text">
-            <div class="link-title"><%- each.title %></div>
-            <div class="link-intro"><%- each.intro || '' %></div>
-          </div>
-        </div>
-      </a>
-    </div>
+
+  <p> <% theme.vvd_local_links.vvd_source_root %> </p>
+  <%- theme.vvd_local_links.vvd_source_root %>
+  
+  
+  
+  <% for(const sub_item of theme.vvd_local_links.families || []) { %>
+	   <p> <%- sub_item.family_name %> </p> 
+	   <p> <%- sub_item.intr %> </p>
+		<% for(const link_info of sub_item.items || []) { %>
+			<p> <%- link_info.name %> </p>
+			<p> <%- link_info.intro %> </p>
+			<p> <%- link_info.link %> </p>
+			<p> <%- link_info.avatar %> </p>
+		<% } %>
   <% } %>
 </div>
-
-
-<% if(theme.links.custom && theme.links.custom.enable && theme.links.custom.content) { %>
-  <!-- Custom -->
-  <div class="custom mx-auto">
-    <%- theme.links.custom.content %>
-  </div>
-<% } %>
 
 <%- inject_point('linksComments') %>
