@@ -7,7 +7,9 @@ page.banner_img_height = theme.links.banner_img_height
 page.banner_mask_alpha = theme.links.banner_mask_alpha
 page.comment = theme.links.comments.type
 %>
-<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"> </script>
+
+<script src="https://101.43.39.125/HexoFiles/js/md5/md5.min.js"> </script>
+<script src="https://101.43.39.125/HexoFiles/js/vvd_js/jquery.js"> </script>
 
 <script>
 	var total_links=[];
@@ -21,6 +23,10 @@ page.comment = theme.links.comments.type
 	 console.log('https://' + s) 
 	 console.log(total_links[1])
 	 console.log(md5(total_links[1]))
+	 var url = 'https://101.43.39.125:6879/make_post_img'
+	 $.post(url, {'key1':'123', 'key2':'234'});
+	 console.log(url)
+	 
  </script>
  
 import hashlib
