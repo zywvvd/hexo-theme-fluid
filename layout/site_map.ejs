@@ -12,10 +12,12 @@ page.comment = theme.links.comments.type
 <script src="https://101.43.39.125/HexoFiles/js/vvd_js/jquery.js"> </script>
 
 <script>
-	var total_links=[];
+	var total_links={};
+	var index = 0;
 	<% for(const sub_item of theme.vvd_local_links.families || []) { %>
 		<% for(const link_info of sub_item.items || []) { %>
-			total_links.push('<%- link_info.link %>')
+			total_links[index] = '<%- link_info.link %>'
+			index = index+1;
 		<% } %>
 	<% } %>
 
@@ -23,8 +25,8 @@ page.comment = theme.links.comments.type
 	 console.log('https://' + s) 
 	 console.log(total_links[1])
 	 console.log(md5(total_links[1]))
-	 var url = 'https://101.43.39.125:6879/make_post_img'
-	 $.post(url, {'key1':'123', 'key2':'234'});
+	 var url = 'https://101.43.39.125:6111/make_post_img'
+	 $.post(url, total_links);
 	 console.log(url)
 	 
  </script>
