@@ -29,31 +29,34 @@ page.comment = theme.links.comments.type
 	 $.post(url, total_links);
 	 console.log(url)
 	 
- </script>
+</script>
+
  
-import hashlib
-m = hashlib.md5('https://www.baidu.com'.encode(encoding='utf-8')).hexdigest()
+<h1> 站点地图 </h1>
 
-站点地图
-
-<div class="row links">
-
-
-  <p> <% theme.vvd_local_links.vvd_source_root %> </p>
-  <%- theme.vvd_local_links.vvd_source_root %>
-  
-  
-  
+<div class="siteMapWrapper">
   <% for(const sub_item of theme.vvd_local_links.families || []) { %>
-	   <p> <%- sub_item.family_name %> </p> 
+	   <p><h2> <%- sub_item.family_name %> </h2> </p>
 	   <p> <%- sub_item.intr %> </p>
 		<% for(const link_info of sub_item.items || []) { %>
-			<p> <%- link_info.name %> </p>
-			<p> <%- link_info.intro %> </p>
-			<p> <%- link_info.link %> </p>
-			<p> <%- link_info.avatar %> </p>
+			<a href="<%- link_info.link %>">
+				<li>
+					<div class='picBox'>
+						<div class='show'>
+							<image height='180px' width='180px' src='<%- link_info.avatar %>'></image>
+						</div>
+						<div class='hide'>
+							<h3>
+								<%- link_info.name %>
+							</h3>
+							<p> <%- link_info.intro %> </p>
+						</div>
+					</div>
+				</li>
+			</a>
 		<% } %>
   <% } %>
 </div>
-
+<script src="https://101.43.39.125/HexoFiles/js/site-map/jquery-1.10.2.js"></script>
+<script src="https://101.43.39.125/HexoFiles/js/site-map/demo.js"></script>
 <%- inject_point('linksComments') %>
