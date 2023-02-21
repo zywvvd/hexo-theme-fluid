@@ -40,10 +40,20 @@ page.comment = theme.links.comments.type
 	   <p> <%- sub_item.intr %> </p>
 		<% for(const link_info of sub_item.items || []) { %>
 			<a href="<%- link_info.link %>">
-				<li>
+				<li class='sitemapLi'>
 					<div class='picBox'>
 						<div class='show'>
-							<image height='180px' width='180px' src='<%- link_info.avatar %>'></image>
+							<div class="sitemapCard">
+								<div class="card-content">
+									<div class="link-avatar my-auto">
+										<img src='<%- link_info.avatar %>' alt="<%- link_info.name %>" onerror="this.onerror=null; this.src=this.srcset='/img/avatar.png'">
+									</div>
+								</div>
+								<div class="link-avatar my-auto">
+									<div class="link-title"><%- link_info.name %></div>
+									<div class="link-intro"><%- link_info.intro %></div>
+								</div>
+							</div>
 						</div>
 						<div class='hide'>
 							<h3>
