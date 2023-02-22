@@ -37,21 +37,21 @@ page.comment = theme.links.comments.type
 <div class="siteMapWrapper">
   <% for(const sub_item of theme.vvd_local_links.families || []) { %>
 	   <p><h2> <%- sub_item.family_name %> </h2> </p>
-	   <p> <%- sub_item.intr %> </p>
+
 		<% for(const link_info of sub_item.items || []) { %>
 			<a href="<%- link_info.link %>">
 				<li class='sitemapLi'>
 					<div class='picBox'>
 						<div class='show'>
 							<div class="sitemapCard">
-								<div class="card-content">
-									<div class="link-avatar my-auto">
+								<div class="sitemap-avatar-container">
+									<div class="sitemap-avatar">
 										<img src='<%- link_info.avatar %>' alt="<%- link_info.name %>" onerror="this.onerror=null; this.src=this.srcset='/img/avatar.png'">
 									</div>
 								</div>
-								<div class="link-avatar my-auto">
-									<div class="link-title"><%- link_info.name %></div>
-									<div class="link-intro"><%- link_info.intro %></div>
+								<div class="sitemap-intro">
+									<div class="sitemap-sub-title"><%- link_info.name %></div>
+									<div class="sitemap-sub-intro"><%- link_info.intro %></div>
 								</div>
 							</div>
 						</div>
