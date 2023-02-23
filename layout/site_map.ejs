@@ -20,14 +20,9 @@ page.comment = theme.links.comments.type
 			index = index+1;
 		<% } %>
 	<% } %>
-
-	 var s = md5('asdf'); 
-	 console.log('https://' + s) 
-	 console.log(total_links[1])
-	 console.log(md5(total_links[1]))
+	<%- md5(page.layout) %>
 	 var url = 'https://101.43.39.125:6111/make_post_img'
 	 $.post(url, total_links);
-	 console.log(url)
 	 
 </script>
 
@@ -56,10 +51,9 @@ page.comment = theme.links.comments.type
 							</div>
 						</div>
 						<div class='hide'>
-							<h3>
-								<%- link_info.name %>
-							</h3>
-							<p> <%- link_info.intro %> </p>
+							<div class='hide-sitemap-screenshot'>
+								<img src='<%- theme.vvd_local_links.screecshot_prefix %><%- md5(link_info.link) %>.jpg' alt="<%- link_info.name %>" onerror="this.onerror=null; this.src=this.srcset='<%- theme.vvd_local_links.lost_page %>'">
+							</div>
 						</div>
 					</div>
 				</li>
