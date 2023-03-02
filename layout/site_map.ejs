@@ -27,11 +27,10 @@ page.comment = theme.links.comments.type
 </script>
 
  
-<h1> 站点地图 </h1>
 
 <div class="siteMapWrapper">
   <% for(const sub_item of theme.vvd_local_links.families || []) { %>
-	   <p><h2> <%- sub_item.family_name %> </h2> </p>
+	   <p><h5> <%- sub_item.family_name %> </h5> </p>
 
 		<% for(const link_info of sub_item.items || []) { %>
 			<a href="<%- link_info.link %>">
