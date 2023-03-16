@@ -30,8 +30,7 @@ page.comment = theme.links.comments.type
 
 <div class="siteMapWrapper">
   <% for(const sub_item of theme.vvd_local_links.families || []) { %>
-	   <p><h5> <%- sub_item.family_name %> </h5> </p>
-
+	   <p><h4 style="margin: 40px 0 20px 10px"> <%- sub_item.family_name %> </h4> </p>
 		<% for(const link_info of sub_item.items || []) { %>
 			<a href="<%- link_info.link %>">
 				<li class='sitemapLi'>
