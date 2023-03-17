@@ -45,9 +45,21 @@ page.banner_mask_alpha = page.banner_mask_alpha || theme.post.banner_mask_alpha
                 <%- inject_point('postMarkdownBegin') %>
                 <%- page.content %>
                 <%- inject_point('postMarkdownEnd') %>
+
+
+				<br /><br />
+				<blockquote>
+					<p>原文链接：<br /> 
+					<a style="font-size: 0.85rem" target="_blank" rel="noopener" href="<%= decode_url(page.permalink) %>"><%= decode_url(page.permalink) %></a>
+					</p>
+				</blockquote>
+
+
               </div>
             <% } %>
             <hr/>
+			
+			
             <div>
               <%- inject_point('postMetaBottom') %>
 
