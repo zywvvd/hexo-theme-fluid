@@ -4,6 +4,11 @@ page.banner_img_height = page.banner_img_height || theme.post.banner_img_height
 page.banner_mask_alpha = page.banner_mask_alpha || theme.post.banner_mask_alpha
 %>
 
+<% if (page.echart){ %>
+	<script type="text/javascript" src="https://101.43.39.125/HexoFiles/js/echarts/v5/echarts.min.js"></script>
+	<script type="text/javascript" src="https://101.43.39.125/HexoFiles/js/echarts/v5/echarts-gl.min.js"></script>
+<% } %>
+
 <div class="container-fluid nopadding-x">
   <div class="row nomargin-x">
     <div class="side-col d-none d-lg-block col-lg-2">
