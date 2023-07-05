@@ -63,6 +63,29 @@ page.banner_mask_alpha = page.banner_mask_alpha || theme.post.banner_mask_alpha
             <% } %>
             <hr/>
 			
+			<!-- 添加打赏模块 -->
+			<div class="reward-container">
+				<% if (theme.donate.enable) { %>
+					<button id="rewardBtn" class="reward-btn">
+						<% if (config.language == 'zh-CN') { %> 
+							❤ 打赏
+						<% } else { %>
+							Donate
+						<% } %>	
+					</button>
+					<p class="tea">“<%= theme.donate.message %>”</p>
+					<div id="rewardImgContainer" class="reward-img-container">
+						<div class="singleImgContainer">
+							<img id="wechatImg" class="reward-img" src="<%= theme.donate.wechatpay %>" alt="微信二维码">
+							<p class="wechatPay">微信支付</p>
+						</div>
+						<div class="singleImgContainer">
+							<img id="alipayImg" class="reward-img" src="<%= theme.donate.alipay %>" alt="支付宝二维码">
+							<p class="aliPay">支付宝支付</p>
+						</div>
+					</div>
+				<% } %>
+			</div>
 			
             <div>
               <%- inject_point('postMetaBottom') %>

@@ -1,0 +1,52 @@
+.tea {
+    font-size: 0.8125em;
+    color: #999999;
+    margin-top: 10px;
+}
+
+.reward-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.reward-btn {
+    padding: 8px 24px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.reward-img-container {
+    display: none;
+    margin-top: 20px;
+    /* 图片容器的透明度 */
+    opacity: 0;
+    /* 过渡效果,使动画更平滑 */
+    transition: opacity 2s ease;
+}
+
+.reward-img {
+    width: 200px;
+    margin: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+/* 单个图片的容器 */
+.singleImgContainer {
+    width: 50%;
+    height: 240px;
+}
+
+/* 微信支付和支付宝支付的文字样式 */
+.wechatPay,.aliPay {
+	text-align: center;
+    font-size: 0.8125em;
+    color: #999999;
+}
