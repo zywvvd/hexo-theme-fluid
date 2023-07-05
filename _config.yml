@@ -252,15 +252,11 @@ web_analytics:  # 网页访问统计
   # See: https://tongji.baidu.com/sc-web/10000033910/home/site/getjs?siteId=13751376
   baidu:
 
-  # Google 统计的 Tracking ID
-  # Google analytics, set Tracking ID
-  # See: https://developers.google.com/analytics/devguides/collection/analyticsjs
+  # Google Analytics 4 的媒体资源 ID
+  # Google Analytics 4 MEASUREMENT_ID
+  # See: https://support.google.com/analytics/answer/9744165#zippy=%2Cin-this-article
   google:
-
-  # Google gtag.js 的媒体资源 ID
-  # Google gtag.js GA_MEASUREMENT_ID
-  # See: https://developers.google.com/analytics/devguides/collection/gtagjs/
-  gtag:
+    measurement_id:
 
   # 腾讯统计的 H5 App ID，开启高级功能才有cid
   # Tencent analytics, set APP ID
@@ -727,7 +723,7 @@ post:
     enable: false
     # 指定的插件，需要同时设置对应插件的必要参数
     # The specified plugin needs to set the necessary parameters at the same time
-    # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus
+    # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus | discuss
     type: disqus
 
 
@@ -847,7 +843,7 @@ remark42:
   components: ['embed']
 
 # Twikoo
-# 基于腾讯云开发
+# 支持腾讯云、Vercel、Railway 等多种平台部署
 # Based on Tencent CloudBase
 # See: https://twikoo.js.org
 twikoo:
@@ -880,6 +876,15 @@ giscus:
   emit-metadata: 0
   input-position: top
   lang: zh-CN
+
+# Discuss
+# 多平台、多数据库、自托管、免费开源评论系统
+# Self-hosted, small size, multi-platform, multi-database, free and open source commenting system
+# See: https://discuss.js.org
+discuss:
+  serverURLs:
+  path: window.location.pathname
+
 
 #---------------------------
 # 归档页
@@ -1031,7 +1036,7 @@ links:
     enable: false
     # 指定的插件，需要同时设置对应插件的必要参数
     # The specified plugin needs to set the necessary parameters at the same time
-    # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus
+    # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus | discuss
     type: disqus
 
 
@@ -1056,13 +1061,13 @@ static_prefix:
 
   github_markdown: https://lib.baomitu.com/github-markdown-css/4.0.0/
 
-  jquery: https://lib.baomitu.com/jquery/3.6.0/
+  jquery: https://lib.baomitu.com/jquery/3.6.4/
 
   bootstrap: https://lib.baomitu.com/twitter-bootstrap/4.6.1/
 
-  prismjs: https://lib.baomitu.com/prism/1.27.0/
+  prismjs: https://lib.baomitu.com/prism/1.29.0/
 
-  tocbot: https://lib.baomitu.com/tocbot/4.18.2/
+  tocbot: https://lib.baomitu.com/tocbot/4.20.1/
 
   typed: https://lib.baomitu.com/typed.js/2.0.12/
 
@@ -1070,24 +1075,26 @@ static_prefix:
 
   nprogress: https://lib.baomitu.com/nprogress/0.2.0/
 
-  mathjax: https://lib.baomitu.com/mathjax/3.2.1/
+  mathjax: https://lib.baomitu.com/mathjax/3.2.2/
 
-  katex: https://lib.baomitu.com/KaTeX/0.15.6/
+  katex: https://lib.baomitu.com/KaTeX/0.16.2/
 
   busuanzi: https://busuanzi.ibruce.info/busuanzi/2.3/
 
-  clipboard: https://lib.baomitu.com/clipboard.js/2.0.10/
+  clipboard: https://lib.baomitu.com/clipboard.js/2.0.11/
 
   mermaid: https://lib.baomitu.com/mermaid/8.14.0/
 
-  valine: https://lib.baomitu.com/valine/1.4.17/
+  valine: https://lib.baomitu.com/valine/1.5.1/
 
-  waline: https://lib.baomitu.com/waline/2.5.1/
+  waline: https://cdn.staticfile.org/waline/2.15.5/
 
-  gitalk: https://lib.baomitu.com/gitalk/1.7.2/
+  gitalk: https://lib.baomitu.com/gitalk/1.8.0/
 
   disqusjs: https://lib.baomitu.com/disqusjs/1.3.0/
 
-  twikoo: https://lib.baomitu.com/twikoo/1.5.11/
+  twikoo: https://lib.baomitu.com/twikoo/1.6.8/
+
+  discuss: https://lib.baomitu.com/discuss/1.2.1/
 
   hint: https://lib.baomitu.com/hint.css/2.7.0/

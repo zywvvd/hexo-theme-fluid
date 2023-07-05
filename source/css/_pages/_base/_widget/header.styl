@@ -25,6 +25,9 @@
     i
       font-size 0.875rem
 
+    i:only-child
+      margin 0 .2rem
+
   .navbar-toggler
     border-width 0
     outline 0
@@ -52,6 +55,7 @@
     color var(--navbar-text-color)
     background-color rgba(0, 0, 0, 0.3)
     border none
+    min-width 8rem
     -webkit-transition background .5s ease-in-out,padding .5s ease-in-out
     transition background .5s ease-in-out,padding .5s ease-in-out
 
@@ -153,6 +157,9 @@
   max-width calc(960px - 6rem)
   width 80%
   overflow-wrap break-word
+
+  .typed-cursor
+    margin 0 .2rem
 
 @media (max-width: 767px)
   #subtitle, .typed-cursor

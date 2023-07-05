@@ -106,29 +106,66 @@ layout: about
 - [x] 支持 LaTeX 数学公式
 - [x] 支持 mermaid 流程图
 
-## 支持我们
+## 鸣谢
 
-你可以扫描下方微信赞赏码支持我们的开源创作，让我们可以补贴服务器及域名等日常开销。
-
-<img src="https://github.com/fluid-dev/static/blob/master/hexo-theme-fluid/sponsor.png?s=200&v=4" width="200" alt="微信赞赏码">
-
-同时我们正在**寻求商业赞助**，如果贵司想在本页显著位置展示广告位（每月 6K+ Views 定向流量曝光），或者有其他赞助形式，可将联系方式发送邮件至 zkqiang#126.com (#替换为@)。
+<table>
+  <thead>
+    <tr>
+      <th align="center" style="width: 240px;">
+        <a href="https://flowus.cn/share/eebf2144-8db7-4d68-b31e-bc2c116871de">
+          <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32983588/243899272-092eeb46-9172-4c10-9e72-53561ff37a00.png" height="200px"><br>
+          <sub>首席赞助商 ORENCEAI</sub><br>
+          <sub>全新的 ChatGPT 人工智能对话平台</sub>
+        </a>
+      </th>
+      <th align="center" style="width: 240px;">
+        <a href="https://www.jetbrains.com/?from=hexo-theme-fluid">
+          <img src="https://raw.githubusercontent.com/fluid-dev/static/690616966f34a58d66aa15ac7b550dd7bbc03967/hexo-theme-fluid/jetbrains.svg" height="200px"><br>
+          <sub>免费开发工具提供方 JetBrains</sub><br>
+          <sub>专注于创建智能开发工具</sub>
+        </a>
+      </th>
+    </tr>
+  </thead>
+</table>
 
 ## 贡献者
 
 [![contributors](https://opencollective.com/hexo-theme-fluid/contributors.svg?width=890&button=false)](https://github.com/fluid-dev/hexo-theme-fluid/graphs/contributors)
 
-英文文档翻译：[@EatRice](https://eatrice.top/) [@橙子杀手](https://ruru.eatrice.top)
+英文文档翻译：[@EatRice](https://eatrice.top/) [@橙子杀手](https://ruru.eatrice.top) [@Sinetian](https://sinetian.github.io/)
 
 其他贡献：[@zhugaoqi](https://github.com/zhugaoqi) [@julydate](https://github.com/julydate)
 
 如你也想贡献代码，可参照[贡献指南](https://hexo.fluid-dev.com/docs/contribute/)
 
-## 鸣谢
+## 支持我们
 
-<a title="鸣谢 JetBrains 免费授权开发工具" href="https://www.jetbrains.com/?from=hexo-theme-fluid" target="_blank">
-  <img src="https://raw.githubusercontent.com/fluid-dev/static/690616966f34a58d66aa15ac7b550dd7bbc03967/hexo-theme-fluid/jetbrains.svg" width="150" alt="JetBrains">
-</a>
+如果你觉得这个项目有帮助，并愿意支持它的发展，可以通过以下方式支持我们的开源创作：
+
+<table>
+  <thead>
+    <tr>
+      <th align="center" style="width: 240px;">
+        <div>
+          <img src="https://github.com/fluid-dev/static/blob/master/hexo-theme-fluid/sponsor.png?s=200&v=4" height="200px" alt="微信赞赏码"><br>
+          <sub>微信赞赏码</sub>
+        </div>
+      </th>
+      <th align="center" style="width: 240px;">
+        <div>
+          <a href="https://etherscan.io/address/0x0021395954710be29c0BFDCB3f98f4D2fa5A1448">
+            <img src="https://avatars.githubusercontent.com/u/6250754?s=200&v=4" height="200px" alt="ERC20 Token">
+          </a>
+          <br>
+          <sub>ERC20 Token: 0x0021395954710<br>be29c0BFDCB3f98f4D2fa5A1448</sub>
+        </div>
+      </th>
+    </tr>
+  </thead>
+</table>
+
+同时我们正在**寻求商业赞助**，如果贵司想在本页显著位置展示广告位（每月 6K+ Views 定向流量曝光），或者有其他赞助形式，可将联系方式发送邮件至 zkqiang#126.com (#替换为@)。
 
 ## Star 趋势
 

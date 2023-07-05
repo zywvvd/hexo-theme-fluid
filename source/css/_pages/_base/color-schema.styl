@@ -66,5 +66,10 @@ if (hexo-config("dark_mode.enable"))
     :root:not([data-user-color-scheme])
       dark-colors()
 
-  [data-user-color-scheme="dark"]
-    dark-colors()
+  @media not print
+    [data-user-color-scheme="dark"]
+      dark-colors()
+
+  @media print
+    :root
+      --color-mode "light"

@@ -6,8 +6,10 @@ const { stripHTML } = require('hexo-util');
 module.exports = (hexo) => {
   const config = hexo.theme.config;
   if (config.post.footnote.enable) {
-    hexo.extend.filter.register('before_post_render', function(page) {
-      page.content = renderFootnotes(page.content, page.footnote);
+    hexo.extend.filter.register('before_post_render', (page) => {
+      if (page.footnote !== false) {
+        page.content = renderFootnotes(page.content, page.footnote);
+      }
       return page;
     });
   }
@@ -24,8 +26,17 @@ module.exports = (hexo) => {
     const reFootnoteContent = /\[\^(\d+)]: ?([\S\s]+?)(?=\[\^(?:\d+)]|\n\n|$)/g;
     const reInlineFootnote = /\[\^(\d+)]\((.+?)\)/g;
     const reFootnoteIndex = /\[\^(\d+)]/g;
+    const reCodeBlock = /<pre>[\s\S]*?<\/pre>/g;
+
     let footnotes = [];
     let html = '';
+    let codeBlocks = [];
+
+    // extract code block
+    text = text.replace(reCodeBlock, function(match) {
+      codeBlocks.push(match);
+      return 'CODE_BLOCK_PLACEHOLDER';
+    });
 
     // threat all inline footnotes
     text = text.replace(reInlineFootnote, function(match, index, content) {
@@ -95,6 +106,12 @@ module.exports = (hexo) => {
       text += '<ol>' + html + '</ol>';
       text += '</div></section>';
     }
+
+    // restore code block
+    text = text.replace(/CODE_BLOCK_PLACEHOLDER/g, function() {
+      return codeBlocks.shift();
+    });
+
     return text;
   }
 };
