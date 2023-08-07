@@ -148,7 +148,7 @@
   var resultSelector = '#local-search-result';
   modal.on('show.bs.modal', function() {
     var path = CONFIG.search_path || '/local-search.xml';
-	var path = "https://101.43.39.125/LocalSearch/local-search.xml"
+	var path = "https://uipv4.zywvvd.com:33030/HexoLocalSearch/local-search.xml";
     localSearchFunc(path, searchSelector, resultSelector);
   });
   modal.on('shown.bs.modal', function() {
