@@ -52,10 +52,10 @@ page.comment = theme.links.comments.type
     <canvas id='quakeCanvas3'></canvas>
 </div>
 
-<script type='text/javascript' src='https://101.43.39.125/HexoFiles/js/planetaryjs/d3.v3.min.js'></script>
-<script type='text/javascript' src='https://101.43.39.125/HexoFiles/js/planetaryjs/topojson.v1.min.js'></script>
-<script type='text/javascript' src='https://101.43.39.125/HexoFiles/js/planetaryjs/planetaryjs.min.js'></script>
-<script type='text/javascript' src='https://101.43.39.125/HexoFiles/js/planetaryjs/moment.min.js'></script>
+<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/d3.v3.min.js'></script>
+<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/topojson.v1.min.js'></script>
+<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/planetaryjs.min.js'></script>
+<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/moment.min.js'></script>
 <script>
 (function() {
   var canvas = document.getElementById('quakeCanvas3');
@@ -94,7 +94,7 @@ page.comment = theme.links.comments.type
   planet.loadPlugin(autocenter({extraHeight: -120}));
   planet.loadPlugin(autoscale({extraHeight: -120}));
   planet.loadPlugin(planetaryjs.plugins.earth({
-    topojson: { file:   'https://101.43.39.125/HexoFiles/js/planetaryjs/world-110m.json' },
+    topojson: { file:   'https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/world-110m.json' },
     oceans:   { fill:   '#001320' },
     land:     { fill:   '#06304e' },
     borders:  { stroke: '#001320' }
@@ -147,7 +147,7 @@ page.comment = theme.links.comments.type
                 .text(function(d) {
                   return "Magnitude " + d;
                 });
-                d3.json('https://101.43.39.125/HexoFiles/js/planetaryjs/year_quakes_small.json', function(err, data) {
+                d3.json('https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/year_quakes_small.json', function(err, data) {
                 if (err) {
                   alert("Problem loading the quake data.");
                   return;
