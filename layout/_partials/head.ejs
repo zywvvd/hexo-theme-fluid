@@ -48,3 +48,22 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
 
   <%- inject_point('head') %>
 </head>
+
+<script>
+// 页面加载完成后隐藏加载动画
+document.addEventListener("readystatechange", function() {
+    const loader = document.getElementById('Loadanimation');
+    if (loader) {
+        // 停留1秒后开始淡出
+        setTimeout(function() {
+            loader.style.transition = 'opacity 2.5s';
+            loader.style.opacity = '0';
+            // 淡出完成后隐藏
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 2600); // 等待淡出动画完成
+        }, 700); // 停留0.8秒
+    }
+});
+</script>
+

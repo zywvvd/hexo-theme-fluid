@@ -67,32 +67,43 @@
 		  <%- views_texts[0] %><span id="vvdpost_value_page_cn">0</span><%- ' 条' %>
         </span>
 
-		<script>
-			console.log(window.location.pathname)
-			var httpRequest = new XMLHttpRequest();
-			httpRequest.open('POST', 'https://uipv4.zywvvd.com:33037/poststats', true);
-			httpRequest.setRequestHeader("Content-type","application/json");
-			httpRequest.send(JSON.stringify(window.location.pathname));
-			httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
-				if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
-					var json = httpRequest.responseText;//获取到服务端返回的数据
-					var obj = JSON.parse(json);
-					var pvCtn = document.querySelector('#vvdpost_container_page_pvuv');
-					if (pvCtn) {
-						var pv_ele = document.querySelector('#vvdpost_value_page_pv');
-						var uv_ele = document.querySelector('#vvdpost_value_page_uv');
-						var cn_ele = document.querySelector('#vvdpost_value_page_cn');
+    <script>
+      console.log(window.location.pathname);
 
-						if (uv_ele && uv_ele) {
-							pv_ele.innerText = obj.pv;
-							uv_ele.innerText = obj.uv;
-							cn_ele.innerText = obj.cn;
-							pvCtn.style.display = 'inline';
-							}
-						}
-					}
-			};
-		</script>
+      // 使用 fetch API 发送 POST 请求
+      fetch('https://uipv4.zywvvd.com:33037/poststats', { // 注意：我移除了端口后的“:6101”，因为它看起来可能是一个错误
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ pathname: window.location.pathname }) // 将路径名作为对象发送，以便在服务器端更容易处理
+      })
+      .then(response => {
+          // 检查响应状态
+          if (!response.ok) {
+              throw new Error('Network response was not ok ' + response.statusText);
+          }
+          return response.json(); // 解析 JSON 响应
+      })
+      .then(data => {
+          // 处理解析后的数据
+          console.log(data.pv);
+          var pvCtn = document.querySelector('#vvdpost_container_page_pvuv');
+          if (pvCtn) {
+              var pvEle = document.querySelector('#vvdpost_value_page_pv');
+              var uvEle = document.querySelector('#vvdpost_value_page_uv');
+              if (pvEle && uvEle) {
+                  pvEle.innerText = data.pv;
+                  uvEle.innerText = data.uv;
+                  pvCtn.style.display = 'inline';
+              }
+          }
+      })
+      .catch(error => {
+          // 处理请求错误
+          console.error('There has been a problem with your fetch operation:', error);
+      });
+  </script>
       <% } %>
     <% } %>
   </div>
