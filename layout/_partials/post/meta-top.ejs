@@ -68,40 +68,42 @@
         </span>
 
     <script>
-      console.log(window.location.pathname);
+    document.addEventListener("DOMContentLoaded", function() {
+	      console.log("PVUV_" + window.location.pathname);
 
-      // 使用 fetch API 发送 POST 请求
-      fetch('https://uipv4.zywvvd.com:33037/poststats', { // 注意：我移除了端口后的“:6101”，因为它看起来可能是一个错误
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ pathname: window.location.pathname }) // 将路径名作为对象发送，以便在服务器端更容易处理
-      })
-      .then(response => {
-          // 检查响应状态
-          if (!response.ok) {
-              throw new Error('Network response was not ok ' + response.statusText);
-          }
-          return response.json(); // 解析 JSON 响应
-      })
-      .then(data => {
-          // 处理解析后的数据
-          console.log(data.pv);
-          var pvCtn = document.querySelector('#vvdpost_container_page_pvuv');
-          if (pvCtn) {
-              var pvEle = document.querySelector('#vvdpost_value_page_pv');
-              var uvEle = document.querySelector('#vvdpost_value_page_uv');
-              if (pvEle && uvEle) {
-                  pvEle.innerText = data.pv;
-                  uvEle.innerText = data.uv;
-                  pvCtn.style.display = 'inline';
-              }
-          }
-      })
-      .catch(error => {
-          // 处理请求错误
-          console.error('There has been a problem with your fetch operation:', error);
+	      // 使用 fetch API 发送 POST 请求
+	      fetch('https://uipv4.zywvvd.com:33037/poststats', { 
+		  method: 'POST',
+		  headers: {
+		      'Content-Type': 'application/json'
+		  },
+		  body: JSON.stringify(window.location.pathname) // 将路径名作为对象发送，以便在服务器端更容易处理
+	      })
+	      .then(response => {
+		  // 检查响应状态
+		  if (!response.ok) {
+		      throw new Error('Network response was not ok ' + response.statusText);
+		  }
+		  return response.json(); // 解析 JSON 响应
+	      })
+	      .then(data => {
+		  // 处理解析后的数据
+		  console.log(data.pv);
+		  var pvCtn = document.querySelector('#vvdpost_container_page_pvuv');
+		  if (pvCtn) {
+		      var pvEle = document.querySelector('#vvdpost_value_page_pv');
+		      var uvEle = document.querySelector('#vvdpost_value_page_uv');
+		      if (pvEle && uvEle) {
+		          pvEle.innerText = data.pv;
+		          uvEle.innerText = data.uv;
+		          pvCtn.style.display = 'inline';
+		      }
+		  }
+	      })
+	      .catch(error => {
+		  // 处理请求错误
+		  console.error('There has been a problem with your fetch operation:', error);
+	      });
       });
   </script>
       <% } %>
