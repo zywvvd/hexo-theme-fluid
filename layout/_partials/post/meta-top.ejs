@@ -93,9 +93,11 @@
 		  if (pvCtn) {
 		      var pvEle = document.querySelector('#vvdpost_value_page_pv');
 		      var uvEle = document.querySelector('#vvdpost_value_page_uv');
+		      var cnEle = document.querySelector('#vvdpost_value_page_cn');
 		      if (pvEle && uvEle) {
 		          pvEle.innerText = data.pv;
 		          uvEle.innerText = data.uv;
+		          cnEle.innerText = data.cn;
 		          pvCtn.style.display = 'inline';
 		      }
 		  }
