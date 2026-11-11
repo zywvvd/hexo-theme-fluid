@@ -114,14 +114,12 @@ page.comment = theme.links.comments.type
   planet.loadPlugin(autorotate(5));
   planet.projection.rotate([250, -20, 0]);
   planet.draw(canvas);
-	var httpRequest = new XMLHttpRequest();
-	httpRequest.open('GET', 'https://uipv4.zywvvd.com:33037/planet_info', true);
-	httpRequest.setRequestHeader("Content-type","application/json");
-	httpRequest.send("");
-	httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
-		if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
-			var testJson = httpRequest.responseText;//获取到服务端返回的数据
-            testJson = $.parseJSON(testJson);
+  fetch("https://uipv4.zywvvd.com:33037/planet_info", { headers: { "Content-Type": "application/json" } })
+    .then(function (r) {
+      if (!r.ok) throw new Error("planet_info " + r.status);
+      return r.json();
+    })
+    .then(function (data) {
               // Create a color scale for the various earthquake magnitudes; the
               // minimum magnitude in our data set is 2.5.
               var colors = d3.scale.pow()
@@ -147,12 +145,6 @@ page.comment = theme.links.comments.type
                 .text(function(d) {
                   return "Magnitude " + d;
                 });
-                d3.json('https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/year_quakes_small.json', function(err, data) {
-                if (err) {
-                  alert("Problem loading the quake data.");
-                  return;
-                }
-                data = testJson;
                 var start = parseInt(data[0].time, 10);
                 var end = parseInt(data[data.length - 1].time, 10);
                 var currentTime = start;
@@ -223,9 +215,10 @@ page.comment = theme.links.comments.type
                   d3.select('#slider').property('value', percentToDate.invert(currentTime));
                   lastTick = now;
                 });
-            });
-        }
-	};
+    })
+    .catch(function (err) {
+      console.error("planet_info load failed:", err);
+    });
   // Plugin to resize the canvas to fill the window and to
   // automatically center the planet when the window size changes
   function autocenter(options) {
