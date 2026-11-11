@@ -29,3 +29,12 @@
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
 <%- js_ex(theme.static_prefix.internal_js, 'boot.js') %>
+
+<% if(theme.fun_features.monitortext.enable) { %>
+  <script type="text/javascript">
+    /*窗口监视*/
+    var originalTitle = document.title;
+    window.onblur = function(){document.title = "<%- theme.fun_features.monitortext.text %>"};
+    window.onfocus = function(){document.title = originalTitle};
+  </script>
+<% } %>

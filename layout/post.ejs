@@ -4,6 +4,11 @@ page.banner_img_height = page.banner_img_height || theme.post.banner_img_height
 page.banner_mask_alpha = page.banner_mask_alpha || theme.post.banner_mask_alpha
 %>
 
+<% if (page.echart){ %>
+	<script type="text/javascript" src="https://uipv4.zywvvd.com:33030/HexoFiles/js/echarts/v5/echarts.min.js"></script>
+	<script type="text/javascript" src="https://uipv4.zywvvd.com:33030/HexoFiles/js/echarts/v5/echarts-gl.min.js"></script>
+<% } %>
+
 <div class="container-fluid nopadding-x">
   <div class="row nomargin-x">
     <div class="side-col d-none d-lg-block col-lg-2">
@@ -14,7 +19,9 @@ page.banner_mask_alpha = page.banner_mask_alpha || theme.post.banner_mask_alpha
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header"><%= page.subtitle || page.title %></h1>
+
+            <!-- <h1 id="seo-header"><%= page.subtitle || page.title %></h1> -->
+
             <% if (theme.post.updated.enable && theme.post.updated && compare_date(page.date, page.updated)) { %>
               <p id="updated-time" class="note note-<%= theme.post.updated.note_class || 'info' %>" style="<%= theme.post.updated.relative ? 'display: none' : '' %>">
                 <% if (theme.post.updated.relative) { %>
@@ -45,9 +52,44 @@ page.banner_mask_alpha = page.banner_mask_alpha || theme.post.banner_mask_alpha
                 <%- inject_point('postMarkdownBegin') %>
                 <%- page.content %>
                 <%- inject_point('postMarkdownEnd') %>
+
+
+				<br /><br />
+				<blockquote>
+					<p>文章链接：<br /> 
+					<a style="font-size: 0.85rem" target="_blank" rel="noopener" href="<%= decode_url(page.permalink) %>"><%= decode_url(page.permalink) %></a>
+					</p>
+				</blockquote>
+
+
               </div>
             <% } %>
             <hr/>
+			
+			<!-- 添加打赏模块 -->
+			<div class="reward-container">
+				<% if (theme.donate.enable) { %>
+					<button id="rewardBtn" class="reward-btn">
+						<% if (config.language == 'zh-CN') { %> 
+							❤ 打赏
+						<% } else { %>
+							Donate
+						<% } %>	
+					</button>
+					<p class="tea">“<%= theme.donate.message %>”</p>
+					<div id="rewardImgContainer" class="reward-img-container">
+						<div class="singleImgContainer">
+							<img id="wechatImg" class="reward-img" src="<%= theme.donate.wechatpay %>" alt="微信二维码">
+							<p class="wechatPay">微信支付</p>
+						</div>
+						<div class="singleImgContainer">
+							<img id="alipayImg" class="reward-img" src="<%= theme.donate.alipay %>" alt="支付宝二维码">
+							<p class="aliPay">支付宝支付</p>
+						</div>
+					</div>
+				<% } %>
+			</div>
+			
             <div>
               <%- inject_point('postMetaBottom') %>
 
