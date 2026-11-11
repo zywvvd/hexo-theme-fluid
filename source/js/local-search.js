@@ -1,160 +1,106 @@
-/* global CONFIG */
+/* global CONFIG, jQuery */
+
+/**
+ * 站内搜索 —— Pagefind 引擎
+ *
+ * 索引: hexo generate 后由 pagefind --site public 生成到 /pagefind/
+ *      (package.json 的 build 脚本已串联; 只有带 data-pagefind-body 的文章页入索引)
+ * 本文件: 把 fluid 搜索弹窗的查询接到 Pagefind, 结果渲染保持 fluid 原生样式
+ *
+ * 替代的旧实现: jQuery 加载 local-search.xml(27MB) 全量下载 + 内存子串匹配
+ */
 
 (function() {
-  // Modified from [hexo-generator-search](https://github.com/wzpan/hexo-generator-search)
-  function localSearchFunc(path, searchSelector, resultSelector) {
-    'use strict';
-    // 0x00. environment initialization
-    var $input = jQuery(searchSelector);
+  'use strict';
+
+  var searchSelector = '#local-search-input';
+  var resultSelector = '#local-search-result';
+  var pagefindBase = (window.CONFIG && window.CONFIG.pagefind_base) || '/pagefind';
+  var pagefindLoading = null;
+  var debounceTimer = null;
+
+  function loadPagefind() {
+    if (!pagefindLoading) {
+      pagefindLoading = import(pagefindBase + '/pagefind.js');
+    }
+    return pagefindLoading;
+  }
+
+  function esc(str) {
+    return jQuery('<div>').text(str == null ? '' : String(str)).html();
+  }
+
+  function renderResults(query, datas) {
     var $result = jQuery(resultSelector);
+    var $input = jQuery(searchSelector);
+    $result.html('');
 
-    if ($input.length === 0) {
-      // eslint-disable-next-line no-console
-      throw Error('No element selected by the searchSelector');
+    if (!datas.length) {
+      $input.addClass('invalid').removeClass('valid');
+      $result.html('<div class="m-auto text-center text-muted">未找到与「' + esc(query) + '」相关的内容</div>');
+      return;
     }
-    if ($result.length === 0) {
-      // eslint-disable-next-line no-console
-      throw Error('No element selected by the resultSelector');
-    }
+    $input.addClass('valid').removeClass('invalid');
+    $result.html('<p class="search-list-count text-muted">找到 ' + datas.length + ' 条相关内容</p>');
 
-    if ($result.attr('class').indexOf('list-group-item') === -1) {
-      $result.html('<div class="m-auto text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div><br/>Loading...</div>');
-    }
-
-    jQuery.ajax({
-      // 0x01. load xml file
-      url     : path,
-      dataType: 'xml',
-      success : function(xmlResponse) {
-        // 0x02. parse xml file
-        var dataList = jQuery('entry', xmlResponse).map(function() {
-          return {
-            title  : jQuery('title', this).text(),
-            content: jQuery('content', this).text(),
-            url    : jQuery('url', this).text()
-          };
-        }).get();
-
-        if ($result.html().indexOf('list-group-item') === -1) {
-          $result.html('');
-        }
-
-        $input.on('input', function() {
-          // 0x03. parse query to keywords list
-          var content = $input.val();
-          var resultHTML = '';
-          var keywords = content.trim().toLowerCase().split(/[\s-]+/);
-          $result.html('');
-          if (content.trim().length <= 0) {
-            return $input.removeClass('invalid').removeClass('valid');
-          }
-          // 0x04. perform local searching
-          dataList.forEach(function(data) {
-            var isMatch = true;
-            if (!data.title || data.title.trim() === '') {
-              data.title = 'Untitled';
-            }
-            var orig_data_title = data.title.trim();
-            var data_title = orig_data_title.toLowerCase();
-            var orig_data_content = data.content.trim().replace(/<[^>]+>/g, '');
-            var data_content = orig_data_content.toLowerCase();
-            var data_url = data.url;
-            var index_title = -1;
-            var index_content = -1;
-            var first_occur = -1;
-            // Skip matching when content is included in search and content is empty
-            if (CONFIG.include_content_in_search && data_content === '') {
-              isMatch = false;
-            } else {
-              keywords.forEach(function (keyword, i) {
-                index_title = data_title.indexOf(keyword);
-                index_content = data_content.indexOf(keyword);
-
-                if (index_title < 0 && index_content < 0) {
-                  isMatch = false;
-                } else {
-                  if (index_content < 0) {
-                    index_content = 0;
-                  }
-                  if (i === 0) {
-                    first_occur = index_content;
-                  }
-                }
-              });
-            }
-            // 0x05. show search results
-            if (isMatch) {
-              resultHTML += '<a href=\'' + data_url + '\' class=\'list-group-item list-group-item-action font-weight-bolder search-list-title\'>' + orig_data_title + '</a>';
-              var content = orig_data_content;
-              if (first_occur >= 0) {
-                // cut out 100 characters
-                var start = first_occur - 20;
-                var end = first_occur + 80;
-
-                if (start < 0) {
-                  start = 0;
-                }
-
-                if (start === 0) {
-                  end = 100;
-                }
-
-                if (end > content.length) {
-                  end = content.length;
-                }
-
-                var match_content = content.substring(start, end);
-
-                // highlight all keywords
-                keywords.forEach(function(keyword) {
-                  var regS = new RegExp(keyword, 'gi');
-                  match_content = match_content.replace(regS, '<span class="search-word">' + keyword + '</span>');
-                });
-
-                resultHTML += '<p class=\'search-list-content\'>' + match_content + '...</p>';
-              }
-            }
-          });
-          if (resultHTML.indexOf('list-group-item') === -1) {
-            return $input.addClass('invalid').removeClass('valid');
-          }
-          $input.addClass('valid').removeClass('invalid');
-          $result.html(resultHTML);
-        });
-      }
+    datas.forEach(function (data) {
+      var title = data.meta && data.meta.title ? data.meta.title : 'Untitled';
+      var item =
+        '<a href="' + data.url + '" class="list-group-item list-group-item-action font-weight-bolder search-list-title">' +
+        esc(title) +
+        '</a>' +
+        '<p class="search-list-content">' + data.excerpt + '...</p>';
+      $result.append(item);
     });
   }
 
-  function localSearchReset(searchSelector, resultSelector) {
-    'use strict';
+  function doSearch(query) {
+    query = String(query || '').trim();
     var $input = jQuery(searchSelector);
     var $result = jQuery(resultSelector);
-
-    if ($input.length === 0) {
-      // eslint-disable-next-line no-console
-      throw Error('No element selected by the searchSelector');
+    if (!query) {
+      $input.removeClass('invalid').removeClass('valid');
+      $result.html('');
+      return;
     }
-    if ($result.length === 0) {
-      // eslint-disable-next-line no-console
-      throw Error('No element selected by the resultSelector');
-    }
+    loadPagefind()
+      .then(function (pagefind) {
+        return pagefind.search(query);
+      })
+      .then(function (response) {
+        var dataPromises = response.results.slice(0, 20).map(function (r) {
+          return r.data();
+        });
+        return Promise.all(dataPromises);
+      })
+      .then(function (datas) {
+        renderResults(query, datas);
+      })
+      .catch(function (err) {
+        console.error('Pagefind search failed:', err);
+      });
+  }
 
-    $input.val('').removeClass('invalid').removeClass('valid');
-    $result.html('');
+  function debounceSearch() {
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(function () {
+      doSearch(jQuery(searchSelector).val());
+    }, 200);
   }
 
   var modal = jQuery('#modalSearch');
-  var searchSelector = '#local-search-input';
-  var resultSelector = '#local-search-result';
-  modal.on('show.bs.modal', function() {
-    var path = CONFIG.search_path || '/local-search.xml';
-	var path = "https://uipv4.zywvvd.com:33030/HexoLocalSearch/local-search.xml";
-    localSearchFunc(path, searchSelector, resultSelector);
+  modal.on('show.bs.modal', function () {
+    loadPagefind().catch(function (err) {
+      console.error('Pagefind load failed:', err);
+    });
   });
-  modal.on('shown.bs.modal', function() {
-    jQuery('#local-search-input').focus();
+  modal.on('shown.bs.modal', function () {
+    jQuery(searchSelector).focus();
   });
-  modal.on('hidden.bs.modal', function() {
-    localSearchReset(searchSelector, resultSelector);
+  modal.on('hidden.bs.modal', function () {
+    window.clearTimeout(debounceTimer);
+    jQuery(searchSelector).val('').removeClass('invalid').removeClass('valid');
+    jQuery(resultSelector).html('');
   });
+  jQuery(document).on('input', searchSelector, debounceSearch);
 })();
