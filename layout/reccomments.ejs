@@ -1,0 +1,18 @@
+<%
+page.layout = "近期评论"
+page.title = theme.reccomments.title || __('小站近期评论')
+page.subtitle = ""
+page.banner_img = theme.reccomments.banner_img
+page.banner_img_height = theme.reccomments.banner_img_height
+page.banner_mask_alpha = theme.reccomments.banner_mask_alpha
+%>
+
+<article class="page-content">
+  <%- page.content %>
+
+  <%- inject_point('pageComments') %>
+</article>
+
+<% if (/<[^>]+? class="[^"]*?markdown-body[^"]*?"/gims.test(page.content)) { %>
+  <%- partial('_partials/markdown-plugins') %>
+<% } %>
