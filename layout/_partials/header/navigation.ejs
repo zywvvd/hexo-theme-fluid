@@ -33,19 +33,26 @@
                   <% if (subText.indexOf('.title') !== -1) {
                     subText = subEach.key
                   } %>
-                  <a class="dropdown-item" href="<%= url_for(subEach.link) %>" target="<%= subEach.target || '_self' %>">
+		<div >
+
+                  <a class="dropdown-item" href="<%= url_for(subEach.link) %>" target="<%= subEach.target || '_self' %>" data-umami-event="<%- subEach.event_key %>">
+
                     <%- subEach.icon ? '<i class="' + subEach.icon + '"></i>' : '' %>
                     <span><%- subText %></span>
                   </a>
+		</div>
                 <% } %>
               </div>
             </li>
           <% } else { %>
             <li class="nav-item">
-              <a class="nav-link" href="<%= url_for(each.link) %>" target="<%= each.target || '_self' %>">
-                <%- each.icon ? '<i class="' + each.icon + '"></i>' : '' %>
-                <span><%- text %></span>
-              </a>
+		<div >
+		      <a class="nav-link" href="<%= url_for(each.link) %>" target="<%= each.target || '_self' %>" data-umami-event="<%- each.event_key %>">
+
+		        <%- each.icon ? '<i class="' + each.icon + '"></i>' : '' %>
+		        <span><%- text %></span>
+		      </a>
+		</div>
             </li>
           <% } %>
         <% } %>
