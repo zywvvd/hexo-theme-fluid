@@ -21,8 +21,8 @@ page.comment = theme.links.comments.type
 		<% } %>
 	<% } %>
 
-	 var url = 'https://uipv4.zywvvd.com:33011/make_post_img'
-	 $.post(url, total_links);
+	 var url = "https://uipv4.zywvvd.com:33011/make_post_img";
+	 fetch(url, { method: "POST", body: new URLSearchParams(total_links) }).catch(function () {});
 	 
 </script>
 
