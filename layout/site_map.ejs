@@ -1,0 +1,73 @@
+<%
+page.layout = "links"
+page.title = theme.vvd_local_links.title || __('links.title')
+page.subtitle = theme.vvd_local_links.subtitle || __('links.subtitle')
+page.banner_img = theme.links.banner_img
+page.banner_img_height = theme.links.banner_img_height
+page.banner_mask_alpha = theme.links.banner_mask_alpha
+page.comment = theme.links.comments.type
+%>
+
+<script src="https://uipv4.zywvvd.com:33030//HexoFiles/js/md5/md5.min.js"> </script>
+<script src="https://uipv4.zywvvd.com:33030//HexoFiles/js/vvd_js/jquery.js"> </script>
+
+<script>
+	var total_links={};
+	var index = 0;
+	<% for(const sub_item of theme.vvd_local_links.families || []) { %>
+		<% for(const link_info of sub_item.items || []) { %>
+			total_links[index] = '<%- link_info.link %>'
+			index = index+1;
+		<% } %>
+	<% } %>
+
+	 var url = 'https://uipv4.zywvvd.com:33011/make_post_img'
+	 $.post(url, total_links);
+	 
+</script>
+
+<style  type="text/css">
+.show,
+.hide{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+</style >
+
+<div class="siteMapWrapper">
+  <% for(const sub_item of theme.vvd_local_links.families || []) { %>
+	   <p><h4 style="margin: 40px 0 20px 10px"> <%- sub_item.family_name %> </h4> </p>
+		<% for(const link_info of sub_item.items || []) { %>
+			<a href="<%- link_info.link %>">
+				<li class='sitemapLi'>
+					<div class='picBox'>
+						<div class='show'>
+							<div class="sitemapCard">
+								<div class="sitemap-avatar-container">
+									<div class="sitemap-avatar">
+										<img src='<%- link_info.avatar %>' alt="<%- link_info.name %>" onerror="this.onerror=null; this.src=this.srcset='/img/avatar.png'">
+									</div>
+								</div>
+								<div class="sitemap-intro">
+									<div class="sitemap-sub-title"><%- link_info.name %></div>
+									<div class="sitemap-sub-intro"><%- link_info.intro %></div>
+								</div>
+							</div>
+						</div>
+						<div class='hide'>
+							<div class='hide-sitemap-screenshot'>
+								<img src='<%- theme.vvd_local_links.screecshot_prefix %><%- md5(link_info.link) %>.jpg' alt="<%- link_info.name %>" onerror="this.onerror=null; this.src=this.srcset='<%- theme.vvd_local_links.lost_page %>'">
+							</div>
+						</div>
+					</div>
+				</li>
+			</a>
+		<% } %>
+  <% } %>
+</div>
+<script src="https://uipv4.zywvvd.com:33030//HexoFiles/js/site-map/jquery-1.10.2.js"></script>
+<script src="https://uipv4.zywvvd.com:33030//HexoFiles/js/site-map/demo.js"></script>
+<%- inject_point('linksComments') %>
