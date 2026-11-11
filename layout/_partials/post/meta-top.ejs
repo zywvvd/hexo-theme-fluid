@@ -74,47 +74,7 @@
 		  <%- views_texts[0] %><span id="vvdpost_value_page_cn">0</span><%- ' 条' %>
         </span>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-	      console.log("PVUV_" + window.location.pathname);
-
-	      // 使用 fetch API 发送 POST 请求
-	      fetch('https://uipv4.zywvvd.com:33037/poststats', { 
-		  method: 'POST',
-		  headers: {
-		      'Content-Type': 'application/json'
-		  },
-		  body: JSON.stringify(window.location.pathname) // 将路径名作为对象发送，以便在服务器端更容易处理
-	      })
-	      .then(response => {
-		  // 检查响应状态
-		  if (!response.ok) {
-		      throw new Error('Network response was not ok ' + response.statusText);
-		  }
-		  return response.json(); // 解析 JSON 响应
-	      })
-	      .then(data => {
-		  // 处理解析后的数据
-		  console.log(data.pv);
-		  var pvCtn = document.querySelector('#vvdpost_container_page_pvuv');
-		  if (pvCtn) {
-		      var pvEle = document.querySelector('#vvdpost_value_page_pv');
-		      var uvEle = document.querySelector('#vvdpost_value_page_uv');
-		      var cnEle = document.querySelector('#vvdpost_value_page_cn');
-		      if (pvEle && uvEle) {
-		          pvEle.innerText = data.pv;
-		          uvEle.innerText = data.uv;
-		          cnEle.innerText = data.cn;
-		          pvCtn.style.display = 'inline';
-		      }
-		  }
-	      })
-	      .catch(error => {
-		  // 处理请求错误
-		  console.error('There has been a problem with your fetch operation:', error);
-	      });
-      });
-  </script>
+    <% import_js(theme.static_prefix.internal_js, 'vvdpostpvuv.js', 'defer') %>?
 
       <% } else if (theme.post.meta.views.source === 'umami')  { %>
         <span id="umami-page-views-container" class="post-meta" style="display: none">
