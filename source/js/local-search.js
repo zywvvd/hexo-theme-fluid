@@ -19,7 +19,12 @@
 
   var searchSelector = '#local-search-input';
   var resultSelector = '#local-search-result';
-  var pagefindBase = (window.CONFIG && window.CONFIG.pagefind_base) || '/pagefind';
+  // 索引托管: 生产走国内图床(33030, CORS 开放, 0.1s)；
+  // 本地预览(:4000)走本地构建索引。判定依据 hostname 而非协议。
+  var onLocalhost = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var pagefindBase = onLocalhost
+    ? '/pagefind'
+    : 'https://uipv4.zywvvd.com:33030/HexoFiles/pagefind';
   var pagefindLoading = null;
   var debounceTimer = null;
 
