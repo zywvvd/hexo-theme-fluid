@@ -8,6 +8,10 @@
  * 本文件: 把 fluid 搜索弹窗的查询接到 Pagefind, 结果渲染保持 fluid 原生样式
  *
  * 替代的旧实现: jQuery 加载 local-search.xml(27MB) 全量下载 + 内存子串匹配
+ *
+ * 分批渲染 (2026-11-12): 单词宽查询可命中数百条, 一次 DOM 全量渲染既慢又没法看。
+ *   默认先渲染 PAGE_SIZE 条, 底部「加载更多」每次追加一批, 直到展示完毕。
+ *   Pagefind 的 results 存根本身已全量在内存, data() 只是懒取详情——分批零额外网络成本。
  */
 
 (function() {
@@ -18,6 +22,9 @@
   var pagefindBase = (window.CONFIG && window.CONFIG.pagefind_base) || '/pagefind';
   var pagefindLoading = null;
   var debounceTimer = null;
+
+  var PAGE_SIZE = 20;
+  var state = { query: '', results: [], shown: 0 };
 
   function loadPagefind() {
     if (!pagefindLoading) {
@@ -30,28 +37,63 @@
     return jQuery('<div>').text(str == null ? '' : String(str)).html();
   }
 
-  function renderResults(query, datas) {
+  function itemHtml(data) {
+    var title = data.meta && data.meta.title ? data.meta.title : 'Untitled';
+    return (
+      '<a href="' + data.url + '" class="list-group-item list-group-item-action font-weight-bolder search-list-title">' +
+      esc(title) +
+      '</a>' +
+      '<p class="search-list-content">' + data.excerpt + '...</p>'
+    );
+  }
+
+  function renderBatch($result, datas) {
+    datas.forEach(function (data) {
+      $result.append(itemHtml(data));
+    });
+  }
+
+  function renderLoadMore($result, remaining) {
+    $result.append(
+      '<button type="button" class="btn btn-outline-secondary btn-block search-load-more" ' +
+      'style="margin-top:12px">加载更多（还有 ' + remaining + ' 条）</button>'
+    );
+  }
+
+  function showNextBatch() {
+    var $result = jQuery(resultSelector);
+    var next = state.results.slice(state.shown, state.shown + PAGE_SIZE);
+    var pending = next.map(function (r) { return r.data(); });
+
+    return Promise.all(pending).then(function (datas) {
+      $result.find('.search-load-more').remove();
+      renderBatch($result, datas);
+      state.shown += datas.length;
+      if (state.shown < state.results.length) {
+        renderLoadMore($result, state.results.length - state.shown);
+      } else {
+        $result.find('.search-list-count').text(
+          '共 ' + state.results.length + ' 条相关内容，已全部显示'
+        );
+      }
+    });
+  }
+
+  function renderResults(query, results) {
     var $result = jQuery(resultSelector);
     var $input = jQuery(searchSelector);
     $result.html('');
 
-    if (!datas.length) {
+    if (!results.length) {
       $input.addClass('invalid').removeClass('valid');
       $result.html('<div class="m-auto text-center text-muted">未找到与「' + esc(query) + '」相关的内容</div>');
       return;
     }
     $input.addClass('valid').removeClass('invalid');
-    $result.html('<p class="search-list-count text-muted">找到 ' + datas.length + ' 条相关内容</p>');
 
-    datas.forEach(function (data) {
-      var title = data.meta && data.meta.title ? data.meta.title : 'Untitled';
-      var item =
-        '<a href="' + data.url + '" class="list-group-item list-group-item-action font-weight-bolder search-list-title">' +
-        esc(title) +
-        '</a>' +
-        '<p class="search-list-content">' + data.excerpt + '...</p>';
-      $result.append(item);
-    });
+    state = { query: query, results: results, shown: 0 };
+    $result.html('<p class="search-list-count text-muted">共 ' + results.length + ' 条相关内容</p>');
+    showNextBatch();
   }
 
   function doSearch(query) {
@@ -65,16 +107,11 @@
     }
     loadPagefind()
       .then(function (pagefind) {
-        return pagefind.search(query);
+        // 按文章发布时间降序（索引侧 post.ejs 注入 data-pagefind-sort="date_sort" = 发布时间戳）
+        return pagefind.search(query, { sort: { date_sort: "desc" } });
       })
       .then(function (response) {
-        var dataPromises = response.results.slice(0, 20).map(function (r) {
-          return r.data();
-        });
-        return Promise.all(dataPromises);
-      })
-      .then(function (datas) {
-        renderResults(query, datas);
+        renderResults(query, response.results);
       })
       .catch(function (err) {
         console.error('Pagefind search failed:', err);
@@ -101,6 +138,13 @@
     window.clearTimeout(debounceTimer);
     jQuery(searchSelector).val('').removeClass('invalid').removeClass('valid');
     jQuery(resultSelector).html('');
+    state = { query: '', results: [], shown: 0 };
   });
+
   jQuery(document).on('input', searchSelector, debounceSearch);
+  jQuery(document).on('click', resultSelector + ' .search-load-more', function () {
+    showNextBatch().catch(function (err) {
+      console.error('Load more failed:', err);
+    });
+  });
 })();
