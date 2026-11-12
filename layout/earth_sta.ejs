@@ -52,11 +52,12 @@ page.comment = theme.links.comments.type
     <canvas id='quakeCanvas3'></canvas>
 </div>
 
-<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/d3.v3.min.js'></script>
-<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/topojson.v1.min.js'></script>
-<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/planetaryjs.min.js'></script>
-<script type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/moment.min.js'></script>
+<script defer type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/d3.v3.min.js'></script>
+<script defer type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/topojson.v1.min.js'></script>
+<script defer type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/planetaryjs.min.js'></script>
+<script defer type='text/javascript' src='https://uipv4.zywvvd.com:33030/HexoFiles/js/planetaryjs/moment.min.js'></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function() {
   var canvas = document.getElementById('quakeCanvas3');
   var board_obj = document.getElementById('fatherobj3');
@@ -288,6 +289,7 @@ page.comment = theme.links.comments.type
     };
   };
 })();
+});
 </script>
 
 
