@@ -5,7 +5,7 @@
  */
 (function () {
   'use strict';
-  var API = 'https://uipv4.zywvvd.com:33037/poststats';
+  var API = 'https://pvuv.zywvvd.com:61213/poststats';
 
   function render() {
     fetch(API, {
