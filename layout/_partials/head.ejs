@@ -19,6 +19,9 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
 
   <link rel="apple-touch-icon" sizes="76x76" href="<%= url_for(theme.apple_touch_icon) %>">
   <link rel="icon" href="<%= url_for(theme.favicon) %>">
+  <link rel="preconnect" href="https://img.zywvvd.com:61213" crossorigin>
+  <link rel="preconnect" href="https://pvuv.zywvvd.com:61213" crossorigin>
+  <link rel="dns-prefetch" href="https://waline.zywvvd.com:61213">
   <% if (theme.canonical.enable) { %>
     <link rel="canonical" href="<%= url_join(config.url, page.canonical_path.replace('index.html', '')) %>"/>
   <% } %>
