@@ -167,13 +167,16 @@ Fluid.events = {
     var bg = document.getElementById('banner');
     if (bg) {
       var src = bg.style.backgroundImage;
-      var url = src.match(/\((.*?)\)/)[1].replace(/(['"])/g, '');
-      var img = new Image();
-      img.onload = function() {
-        window.NProgress && window.NProgress.status !== null && window.NProgress.inc(0.2);
-      };
-      img.src = url;
-      if (img.complete) { img.onload(); }
+      var matched = src && src.match(/\((.*?)\)/);
+      if (matched) {
+        var url = matched[1].replace(/(['"])/g, '');
+        var img = new Image();
+        img.onload = function() {
+          window.NProgress && window.NProgress.status !== null && window.NProgress.inc(0.2);
+        };
+        img.src = url;
+        if (img.complete) { img.onload(); }
+      }
     }
 
     var notLazyImages = jQuery('main img:not([lazyload])');
