@@ -37,6 +37,27 @@ page.comment = theme.links.comments.type
     padding: 0rem 0 1rem 0;
     text-align: center;
 }
+
+/* 访客足迹面板(地球 2.0) */
+#vvd-planet-stats{
+  position: fixed; right: 2vw; top: 14vh; width: 240px;
+  padding: 14px 16px; border-radius: 12px;
+  background: rgba(8, 20, 38, 0.55);
+  border: 1px solid rgba(80,160,255,0.25);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  color: #dcecff; font-size: 13px; z-index: 10;
+  backdrop-filter: blur(6px);
+}
+#vvd-planet-stats .vps-title{ font-size: 15px; font-weight: 600; letter-spacing: 1px; margin-bottom: 10px; color: #9fd8ff; }
+#vvd-planet-stats .vps-nums{ display: flex; justify-content: space-between; margin-bottom: 12px; }
+#vvd-planet-stats .vps-nums b{ display: block; font-size: 20px; color: #fff; }
+#vvd-planet-stats .vps-nums span{ color: #7fa8c9; font-size: 12px; }
+#vvd-planet-stats .vps-sub{ margin: 10px 0 6px; color: #9fd8ff; font-size: 12px; letter-spacing: 1px; }
+#vvd-planet-stats .vps-row{ margin: 5px 0; }
+#vvd-planet-stats .vps-row .vps-bar{ height: 6px; border-radius: 3px; background: linear-gradient(90deg,#2b7bff,#39d0ff); width: 0; transition: width 0.8s ease; }
+#vvd-planet-stats .vps-row .vps-line{ display: flex; justify-content: space-between; font-size: 12px; color: #bcd8ee; }
+@media (max-width: 1200px){ #vvd-planet-stats{ display: none; } }
+#vvd-starfield{ position: fixed; inset: 0; z-index: -770; pointer-events: none; }
 </style>
 
 
@@ -45,12 +66,26 @@ page.comment = theme.links.comments.type
 	<div class="earth_word">
 		30天内的来访者
 	</div>
-	〇&nbsp 历史来访者 &nbsp&nbsp&nbsp  <span style="color:#F33">〇</span>&nbsp 当前来访者
+	〇&nbsp 越早来访越暗 &nbsp→&nbsp <span style="color:#fff">〇</span>&nbsp 越新越亮 &nbsp·&nbsp 拖动旋转 · 滚轮缩放
 </div>
 
 <div id='fatherobj3'>
     <canvas id='quakeCanvas3'></canvas>
 </div>
+
+<div id='vvd-planet-stats'>
+  <div class="vps-title">近 30 天访客足迹</div>
+  <div class="vps-nums">
+    <div><b id="vps-visits">—</b><span>访问</span></div>
+    <div><b id="vps-ips">—</b><span>访客</span></div>
+    <div><b id="vps-countries">—</b><span>国家</span></div>
+  </div>
+  <div class="vps-sub">国家 TOP 10</div>
+  <div id="vps-countries-list"></div>
+  <div class="vps-sub">城市 TOP 5</div>
+  <div id="vps-cities-list"></div>
+</div>
+<canvas id="vvd-starfield"></canvas>
 
 <script defer type='text/javascript' src='https://img.zywvvd.com:61213/HexoFiles/js/planetaryjs/d3.v3.min.js'></script>
 <script defer type='text/javascript' src='https://img.zywvvd.com:61213/HexoFiles/js/planetaryjs/topojson.v1.min.js'></script>
@@ -100,6 +135,25 @@ document.addEventListener("DOMContentLoaded", function () {
     land:     { fill:   '#06304e' },
     borders:  { stroke: '#001320' }
   }));
+  // 大气光晕: 在地球外缘绘制径向渐变, 提升太空感
+  planet.loadPlugin(function (globe) {
+    globe.onDraw(function () {
+      var ctx = globe.context;
+      if (!ctx) return;
+      var t = globe.projection.translate();
+      var r = globe.projection.scale();
+      var grad = ctx.createRadialGradient(t[0], t[1], r * 0.98, t[0], t[1], r * 1.28);
+      grad.addColorStop(0, 'rgba(70,150,255,0.32)');
+      grad.addColorStop(0.45, 'rgba(50,110,255,0.10)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = grad;
+      ctx.arc(t[0], t[1], r * 1.28, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.restore();
+    });
+  });
   planet.loadPlugin(planetaryjs.plugins.pings());
   planet.loadPlugin(planetaryjs.plugins.zoom({
     scaleExtent: [50, 5000]
@@ -115,6 +169,73 @@ document.addEventListener("DOMContentLoaded", function () {
   planet.loadPlugin(autorotate(5));
   planet.projection.rotate([250, -20, 0]);
   planet.draw(canvas);
+  // 星空背景: 固定画布层, 220 颗闪烁星(半帧率省电)
+  (function () {
+    var sf = document.getElementById('vvd-starfield');
+    var sctx = sf.getContext('2d');
+    var stars = [];
+    function seed() {
+      sf.width = window.innerWidth; sf.height = window.innerHeight;
+      stars = [];
+      for (var i = 0; i < 220; i++) {
+        stars.push({
+          x: Math.random() * sf.width,
+          y: Math.random() * sf.height,
+          r: Math.random() * 1.3 + 0.3,
+          p: Math.random() * Math.PI * 2,
+          s: 0.008 + Math.random() * 0.02
+        });
+      }
+    }
+    seed();
+    window.addEventListener('resize', seed);
+    var frame = 0;
+    (function twinkle() {
+      frame++;
+      if (frame % 2 === 0) {
+        sctx.clearRect(0, 0, sf.width, sf.height);
+        for (var i = 0; i < stars.length; i++) {
+          var st = stars[i];
+          st.p += st.s;
+          sctx.globalAlpha = 0.25 + 0.6 * (0.5 + 0.5 * Math.sin(st.p));
+          sctx.fillStyle = '#cfe6ff';
+          sctx.beginPath();
+          sctx.arc(st.x, st.y, st.r, 0, 2 * Math.PI);
+          sctx.fill();
+        }
+        sctx.globalAlpha = 1;
+      }
+      requestAnimationFrame(twinkle);
+    })();
+  })();
+  // 访客足迹统计面板(静默失败不影响地球)
+  fetch('https://pvuv.zywvvd.com:61213/planet_stats')
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (s) {
+      if (!s || !s.visits) return;
+      var fmt = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+      document.getElementById('vps-visits').textContent = fmt(s.visits);
+      document.getElementById('vps-ips').textContent = fmt(s.distinct);
+      document.getElementById('vps-countries').textContent = s.country_total;
+      var maxc = s.countries.length ? s.countries[0].count : 1;
+      var cl = document.getElementById('vps-countries-list');
+      s.countries.forEach(function (c) {
+        var row = document.createElement('div');
+        row.className = 'vps-row';
+        row.innerHTML = '<div class="vps-line"><span>' + c.name + '</span><span>' + c.count + '</span></div><div class="vps-bar"></div>';
+        cl.appendChild(row);
+        requestAnimationFrame(function () { row.querySelector('.vps-bar').style.width = Math.max(8, c.count / maxc * 100) + '%'; });
+      });
+      var cl2 = document.getElementById('vps-cities-list');
+      s.cities.forEach(function (c) {
+        var row = document.createElement('div');
+        row.className = 'vps-row';
+        row.innerHTML = '<div class="vps-line"><span>' + c.name + '</span><span>' + c.count + '</span></div><div class="vps-bar"></div>';
+        cl2.appendChild(row);
+        requestAnimationFrame(function () { row.querySelector('.vps-bar').style.width = Math.max(8, c.count / (s.cities[0].count || 1) * 100) + '%'; });
+      });
+    })
+    .catch(function () { /* 面板静默失败 */ });
   fetch("https://pvuv.zywvvd.com:61213/planet_info", { headers: { "Content-Type": "application/json" } })
     .then(function (r) {
       if (!r.ok) throw new Error("planet_info " + r.status);
@@ -125,31 +246,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.warn("planet_info empty: globe without visitor pings");
                 return;
               }
-              // Create a color scale for the various earthquake magnitudes; the
-              // minimum magnitude in our data set is 2.5.
-              var colors = d3.scale.pow()
-                .exponent(3)
-                .domain([1, 2, 3, 8, 10])
-                  .range(['white', 'white', 'red', 'red', 'purple']);
-              // Also create a scale for mapping magnitudes to ping angle sizes
-              var angles = d3.scale.pow()
-                .exponent(3)
-                .domain([2.5, 10])
-                .range([0.5, 15]);
-              // And finally, a scale for mapping magnitudes to ping TTLs
-              var ttls = d3.scale.pow()
-                .exponent(3)
-                .domain([2.5, 10])
-                .range([2000, 5000]);
-                // Create a key to show the magnitudes and their colors
-              d3.select('#magnitudes').selectAll('li')
-                .data(colors.ticks(9))
-              .enter()
-                .append('li')
-                .style('color', colors)
-                .text(function(d) {
-                  return "Magnitude " + d;
-                });
+              // 新近度配色: 按数据序号映射, 越新的访客越亮(深蓝→青→白)
+              var recency = d3.scale.linear().domain([0, data.length]).range([0, 1]);
+              var colors = d3.scale.linear()
+                .domain([0, 0.6, 1])
+                .range(['#2b7bff', '#39d0ff', '#ffffff']);
+              var angles = d3.scale.linear().domain([0, 1]).range([1.5, 5]);
+              var ttls = d3.scale.linear().domain([0, 1]).range([1600, 2600]);
                 var start = parseInt(data[0].time, 10);
                 var end = parseInt(data[data.length - 1].time, 10);
                 var currentTime = start;
@@ -206,12 +309,11 @@ document.addEventListener("DOMContentLoaded", function () {
                   });
                   for (var i = 0; i < toPing.length; i++) {
                     var ping = toPing[i];
+                    var rec = (ping.time - start) / Math.max(1, end - start);
                     planet.plugins.pings.add(ping.lng, ping.lat, {
-                      // Here we use the `angles` and `colors` scales we built earlier
-                      // to convert magnitudes to appropriate angles and colors.
-                      angle: angles(ping.mag),
-                      color: colors(ping.mag),
-                      ttl:   ttls(ping.mag)
+                      angle: angles(rec),
+                      color: colors(rec),
+                      ttl:   ttls(rec)
                     });
                   }
                   currentTime += dataDelta;
