@@ -121,6 +121,10 @@ document.addEventListener("DOMContentLoaded", function () {
       return r.json();
     })
     .then(function (data) {
+              if (!data || !data.length) {
+                console.warn("planet_info empty: globe without visitor pings");
+                return;
+              }
               // Create a color scale for the various earthquake magnitudes; the
               // minimum magnitude in our data set is 2.5.
               var colors = d3.scale.pow()
