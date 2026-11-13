@@ -24,7 +24,7 @@
   var onLocalhost = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   var pagefindBase = onLocalhost
     ? '/pagefind'
-    : 'https://uipv4.zywvvd.com:33030/HexoFiles/pagefind';
+    : 'https://img.zywvvd.com:61213/HexoFiles/pagefind';
   var pagefindLoading = null;
   var debounceTimer = null;
 
