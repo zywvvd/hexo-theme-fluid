@@ -126,6 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var body_width = window.innerWidth;
   var real_container_obj = document.getElementsByClassName('container');
   for (var i = 0; i < real_container_obj.length; i++) {
+    if (real_container_obj[i].closest('.header-inner')) continue;
     real_container_obj[i].style.maxWidth = '100%';
   }
   var real_col_obj = document.getElementsByClassName('col-md-10');
@@ -148,6 +149,38 @@ document.addEventListener("DOMContentLoaded", function () {
     land:     { fill:   '#06304e' },
     borders:  { stroke: '#001320' }
   }));
+  // 大气光晕: 在地球外缘绘制径向渐变, 提升太空感
+  planet.loadPlugin(function (globe) {
+    globe.onDraw(function () {
+      var ctx = globe.context;
+      if (!ctx) return;
+      var t = globe.projection.translate();
+      var r = globe.projection.scale();
+      var grad = ctx.createRadialGradient(t[0], t[1], r * 0.98, t[0], t[1], r * 1.28);
+      grad.addColorStop(0, 'rgba(70,150,255,0.32)');
+      grad.addColorStop(0.45, 'rgba(50,110,255,0.10)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = grad;
+      ctx.arc(t[0], t[1], r * 1.28, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.restore();
+    });
+  });
+  planet.loadPlugin(planetaryjs.plugins.pings());
+  planet.loadPlugin(planetaryjs.plugins.zoom({
+    scaleExtent: [50, 5000]
+  }));
+  planet.loadPlugin(planetaryjs.plugins.drag({
+    onDragStart: function() {
+      this.plugins.autorotate.pause();
+    },
+    onDragEnd: function() {
+      this.plugins.autorotate.resume();
+    }
+  }));
+  planet.loadPlugin(autorotate(5));
   // 当前访客标记: 小半径实心点+粗呼吸环+扩散涟漪(常驻, 数据异步就绪后注入 __vvdMe)
   planet.loadPlugin(function (globe) {
     globe.onDraw(function () {
@@ -183,38 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 大气光晕: 在地球外缘绘制径向渐变, 提升太空感
-  planet.loadPlugin(function (globe) {
-    globe.onDraw(function () {
-      var ctx = globe.context;
-      if (!ctx) return;
-      var t = globe.projection.translate();
-      var r = globe.projection.scale();
-      var grad = ctx.createRadialGradient(t[0], t[1], r * 0.98, t[0], t[1], r * 1.28);
-      grad.addColorStop(0, 'rgba(70,150,255,0.32)');
-      grad.addColorStop(0.45, 'rgba(50,110,255,0.10)');
-      grad.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.save();
-      ctx.beginPath();
-      ctx.fillStyle = grad;
-      ctx.arc(t[0], t[1], r * 1.28, 0, 2 * Math.PI, false);
-      ctx.fill();
-      ctx.restore();
-    });
-  });
-  planet.loadPlugin(planetaryjs.plugins.pings());
-  planet.loadPlugin(planetaryjs.plugins.zoom({
-    scaleExtent: [50, 5000]
-  }));
-  planet.loadPlugin(planetaryjs.plugins.drag({
-    onDragStart: function() {
-      this.plugins.autorotate.pause();
-    },
-    onDragEnd: function() {
-      this.plugins.autorotate.resume();
-    }
-  }));
-  planet.loadPlugin(autorotate(5));
   planet.projection.rotate([250, -20, 0]);
   planet.draw(canvas);
   // 星空背景: 固定画布层, 220 颗闪烁星(半帧率省电)
@@ -389,7 +390,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     var ping = toPing[i];
                     var rec = (ping.time - start) / Math.max(1, end - start);
                     planet.plugins.pings.add(ping.lng, ping.lat, {
-                      angle: 1.6,
+                      angle: 0.8,
                       color: colors(rec),
                       ttl:   1800
                     });
