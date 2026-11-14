@@ -5,7 +5,7 @@ page.subtitle = theme.links.subtitle || __('earthsta.subtitle')
 page.banner_img = theme.links.banner_img
 page.banner_img_height = theme.links.banner_img_height
 page.banner_mask_alpha = theme.links.banner_mask_alpha
-page.comment = theme.links.comments.type
+page.comment = 'waline'
 %>
 
 <style type="text/css">
@@ -58,6 +58,17 @@ page.comment = theme.links.comments.type
 #vvd-planet-stats .vps-row .vps-line{ display: flex; justify-content: space-between; font-size: 12px; color: #bcd8ee; }
 @media (max-width: 1200px){ #vvd-planet-stats{ display: none; } }
 #vvd-starfield{ position: fixed; inset: 0; z-index: -770; pointer-events: none; }
+
+/* 全屏模式(地球 2.0): 挣脱主题框架 */
+body.earth-fs .navbar { display: none !important; }
+body.earth-fs .banner { display: none !important; }
+body.earth-fs .footer-inner { display: none !important; }
+body.earth-fs #fatherobj3 { position: fixed; inset: 0; z-index: -700; }
+body.earth-fs .earth_title { position: fixed; top: 2vh; left: 0; right: 0; z-index: 20; height: auto; }
+body.earth-fs .vvd-fs-spacer { height: 100vh; }
+.vvd-fs-comments { position: relative; z-index: 30; background: rgba(4,12,24,0.78); padding: 20px 0 40px; margin-top: 16px; }
+.vvd-fs-comments-inner { max-width: 720px; margin: 0 auto; padding: 0 16px; color: #dcecff; }
+#vvd-planet-stats .vps-me { margin: -6px 0 10px; color: #ff6b60; font-size: 12px; }
 </style>
 
 
@@ -75,6 +86,7 @@ page.comment = theme.links.comments.type
 
 <div id='vvd-planet-stats'>
   <div class="vps-title">近 30 天访客足迹</div>
+  <div id="vps-me" class="vps-me">当前位置(你): 定位中…</div>
   <div class="vps-nums">
     <div><b id="vps-visits">—</b><span>访问</span></div>
     <div><b id="vps-ips">—</b><span>访客</span></div>
@@ -87,6 +99,13 @@ page.comment = theme.links.comments.type
 </div>
 <canvas id="vvd-starfield"></canvas>
 
+<div class="vvd-fs-spacer"></div>
+<div class="vvd-fs-comments">
+  <div class="vvd-fs-comments-inner">
+<%- partial('_partials/comments') %>
+  </div>
+</div>
+
 <script defer type='text/javascript' src='https://img.zywvvd.com:61213/HexoFiles/js/planetaryjs/d3.v3.min.js'></script>
 <script defer type='text/javascript' src='https://img.zywvvd.com:61213/HexoFiles/js/planetaryjs/topojson.v1.min.js'></script>
 <script defer type='text/javascript' src='https://img.zywvvd.com:61213/HexoFiles/js/planetaryjs/planetaryjs.min.js'></script>
@@ -97,32 +116,33 @@ document.addEventListener("DOMContentLoaded", function () {
   var canvas = document.getElementById('quakeCanvas3');
   var board_obj = document.getElementById('fatherobj3');
   
-  var header_obj = document.getElementsByClassName('header-inner');
-  header_obj = header_obj[0];
-  
-  header_obj.style.cssText = "height: 9vh;";
+  // —— 全屏模式(地球 2.0): 挣脱主题框架 ——
+  document.body.classList.add('earth-fs');
+  var header_obj = document.getElementsByClassName('header-inner')[0];
+  if (header_obj) header_obj.style.display = 'none';
+  var nav_obj = document.querySelector('.navbar');
+  if (nav_obj) nav_obj.style.display = 'none';
+  var footer_obj = document.querySelector('.footer-inner');
+  if (footer_obj) footer_obj.style.display = 'none';
   var temp_board_obj = document.getElementById('board');
-  temp_board_obj.style.cssText = "background-color: rgba(0,0,0,0);box-shadow:0 12px 15px 0 rgb(0 0 0 / 0%), 0 17px 50px 0 rgb(0 0 0 / 0%);width:100%;"
-  
-  var real_mask_obj = document.getElementsByClassName('real_mask');
-  real_mask_obj = real_mask_obj[0]
-  real_mask_obj.style.cssText = "background-color: rgba(0,0,0,0.8);z-index: -777;height: 100%;position: fixed;width: 100%;"
-  
-  var body_height = document.body.clientHeight;
-  var body_width = document.body.clientWidth;
-  body_width = body_width * 0.8;
-  
+  if (temp_board_obj) temp_board_obj.style.cssText = 'background-color: transparent; box-shadow: none; width: 100%; padding: 0;';
+  var real_mask_obj = document.getElementsByClassName('real_mask')[0];
+  if (real_mask_obj) real_mask_obj.style.cssText = 'background-color: rgba(0,0,0,0.8); z-index: -777; height: 100%; position: fixed; width: 100%;';
+
+  var body_height = window.innerHeight;
+  var body_width = window.innerWidth;
   var real_container_obj = document.getElementsByClassName('container');
   for (var i = 0; i < real_container_obj.length; i++) {
-    var temp = real_container_obj[i];
-	temp.style.cssText = "max-width:" + body_width.toString() + "px;";
+    real_container_obj[i].style.maxWidth = '100%';
   }
- 
   var real_col_obj = document.getElementsByClassName('col-md-10');
   for (var i = 0; i < real_col_obj.length; i++) {
-    var temp = real_col_obj[i];
-	temp.style.cssText = "max-width:100%;";
+    real_col_obj[i].style.maxWidth = '100%';
   }
+  window.addEventListener('resize', function () {
+    body_height = window.innerHeight;
+    body_width = window.innerWidth;
+  });
   
   // Create our Planetary.js planet and set some initial values;
   // we use several custom plugins, defined at the bottom of the file
@@ -242,15 +262,23 @@ document.addEventListener("DOMContentLoaded", function () {
       return r.json();
     })
     .then(function (data) {
-              if (!data || !data.length) {
+              // 当前访客(你)与历史足迹分离: me=服务端标记的定位点
+              var mePoints = [];
+              var historyData = [];
+              (data || []).forEach(function (d) {
+                if (d.me) { mePoints.push(d); } else { historyData.push(d); }
+              });
+              if (!historyData.length && !mePoints.length) {
                 console.warn("planet_info empty: globe without visitor pings");
                 return;
               }
-              // 新近度配色: 按数据序号映射, 越新的访客越亮(深蓝→青→白)
+              if (!historyData.length) historyData = mePoints.slice(0, 1);
+              var data = historyData;
+              // 新近度配色: 按数据序号映射, 越新的访客越亮——历史点整体调暗(当前访客单独高亮)
               var recency = d3.scale.linear().domain([0, data.length]).range([0, 1]);
               var colors = d3.scale.linear()
                 .domain([0, 0.6, 1])
-                .range(['#2b7bff', '#39d0ff', '#ffffff']);
+                .range(['rgba(43,123,255,0.35)', 'rgba(57,208,255,0.40)', 'rgba(255,255,255,0.55)']);
               var angles = d3.scale.linear().domain([0, 1]).range([1.5, 5]);
               var ttls = d3.scale.linear().domain([0, 1]).range([1600, 2600]);
                 var start = parseInt(data[0].time, 10);
@@ -322,6 +350,18 @@ document.addEventListener("DOMContentLoaded", function () {
                   d3.select('#slider').property('value', percentToDate.invert(currentTime));
                   lastTick = now;
                 });
+              // 当前访客(你): 高亮红点常驻脉冲 + 面板位置信息(mePoints 已由上方分流)
+              if (mePoints.length) {
+                var me = mePoints[0];
+                var addMe = function () {
+                  planet.plugins.pings.add(me.lng, me.lat, { angle: 8, color: '#ff3b30', ttl: 4600 });
+                };
+                addMe();
+                setInterval(addMe, 2600);
+                var locText = [me.city, me.country].filter(function (x) { return x && x !== '-'; }).join(', ');
+                var el = document.getElementById('vps-me');
+                if (el) el.textContent = locText ? '当前位置(你): ' + locText : '当前位置(你): 已定位';
+              }
     })
     .catch(function (err) {
       console.error("planet_info load failed:", err);
