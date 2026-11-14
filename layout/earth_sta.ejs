@@ -65,7 +65,7 @@ body.earth-fs .banner { display: none !important; }
 body.earth-fs .footer-inner { display: none !important; }
 body.earth-fs #fatherobj3 { position: fixed; inset: 0; z-index: 1; }
 body.earth-fs .earth_title { position: fixed; top: 2vh; left: 0; right: 0; z-index: 20; height: auto; pointer-events: none; }
-#vvd-planet-stats .vps-me { margin: -6px 0 10px; color: #ff6b60; font-size: 12px; }
+#vvd-planet-stats .vps-me { margin: -6px 0 10px; color: #bcd8ee; font-size: 12px; }
 body.earth-fs #vvd-fs-video { position: fixed; inset: 0; z-index: -776; pointer-events: none; }
 body.earth-fs #vvd-fs-video video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
 </style>
@@ -76,7 +76,7 @@ body.earth-fs #vvd-fs-video video { width: 100%; height: 100%; object-fit: cover
 	<div class="earth_word">
 		全球访客足迹 · 近 30 天
 	</div>
-	<span style="color:#9fd8ff">〇</span>&nbsp 越早越暗 &nbsp→&nbsp <span style="color:#fff">〇</span>&nbsp 越新越亮 &nbsp&nbsp <span style="color:#ff3b30">〇</span>&nbsp 当前访客(你) &nbsp&nbsp 拖动旋转 · 滚轮缩放
+	<span style="color:#9fd8ff">〇</span>&nbsp 越早越暗 &nbsp→&nbsp <span style="color:#fff">〇</span>&nbsp 越新越亮 &nbsp&nbsp <span style="color:#fff">◎</span>&nbsp 当前访客(你) &nbsp&nbsp 拖动旋转 · 滚轮缩放
 </div>
 
 <div id='fatherobj3'>
@@ -151,6 +151,32 @@ document.addEventListener("DOMContentLoaded", function () {
     land:     { fill:   '#06304e' },
     borders:  { stroke: '#001320' }
   }));
+  // 当前访客标记: 小半径实心点+粗呼吸环+扩散涟漪(常驻, 数据异步就绪后注入 __vvdMe)
+  planet.loadPlugin(function (globe) {
+    globe.onDraw(function () {
+      var me = window.__vvdMe;
+      var ctx = globe.context;
+      if (!me || !ctx) return;
+      var pt = globe.projection([me.lng, me.lat]);
+      if (!pt) return;
+      var pulse = 0.5 + 0.5 * Math.sin(Date.now() / 420);
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(pt[0], pt[1], 4, 0, 2 * Math.PI);
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.fill();
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = 'rgba(255,255,255,' + (0.55 + 0.45 * pulse) + ')';
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(pt[0], pt[1], 4 + 3 + 3 * pulse, 0, 2 * Math.PI);
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(255,255,255,' + (0.55 - 0.45 * pulse) + ')';
+      ctx.stroke();
+      ctx.restore();
+    });
+  });
+
   // 大气光晕: 在地球外缘绘制径向渐变, 提升太空感
   planet.loadPlugin(function (globe) {
     globe.onDraw(function () {
@@ -297,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
               var recency = d3.scale.linear().domain([0, data.length]).range([0, 1]);
               var colors = d3.scale.linear()
                 .domain([0, 0.6, 1])
-                .range(['#244f8f', '#2e86c8', '#a8d8ff']);
+                .range(['#4a90e2', '#7cc0ff', '#ffffff']);
               
                 var start = parseInt(data[0].time, 10);
                 var end = parseInt(data[data.length - 1].time, 10);
@@ -368,14 +394,10 @@ document.addEventListener("DOMContentLoaded", function () {
                   d3.select('#slider').property('value', percentToDate.invert(currentTime));
                   lastTick = now;
                 });
-              // 当前访客(你): 高亮红点常驻脉冲 + 面板位置信息(mePoints 已由上方分流)
+              // 当前访客(你): 注入常驻标记(onDraw 插件绘制), 面板显示位置
               if (mePoints.length) {
                 var me = mePoints[0];
-                var addMe = function () {
-                  planet.plugins.pings.add(me.lng, me.lat, { angle: 9, color: '#ff3b30', ttl: 5000 });
-                };
-                addMe();
-                setInterval(addMe, 2600);
+                window.__vvdMe = { lng: me.lng, lat: me.lat };
                 var locText = [me.city, me.country].filter(function (x) { return x && x !== '-'; }).join(', ');
                 var el = document.getElementById('vps-me');
                 if (el) el.textContent = locText ? '当前位置(你): ' + locText : '当前位置(你): 已定位';
