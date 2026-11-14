@@ -60,14 +60,13 @@ page.comment = 'waline'
 #vvd-starfield{ position: fixed; inset: 0; z-index: -770; pointer-events: none; }
 
 /* 全屏模式(地球 2.0): 挣脱主题框架 */
-body.earth-fs .navbar { display: none !important; }
 body.earth-fs .banner { display: none !important; }
 body.earth-fs .footer-inner { display: none !important; }
 body.earth-fs #fatherobj3 { position: fixed; inset: 0; z-index: 1; }
-body.earth-fs .earth_title { position: fixed; top: 2vh; left: 0; right: 0; z-index: 20; height: auto; pointer-events: none; }
+body.earth-fs .earth_title { position: fixed; top: 10vh; left: 0; right: 0; z-index: 20; height: auto; pointer-events: none; }
 #vvd-planet-stats .vps-me { margin: -6px 0 10px; color: #bcd8ee; font-size: 12px; }
 body.earth-fs #vvd-fs-video { position: fixed; inset: 0; z-index: -776; pointer-events: none; }
-body.earth-fs #vvd-fs-video video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+body.earth-fs #vvd-fs-video video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.45); }
 </style>
 
 
@@ -76,7 +75,7 @@ body.earth-fs #vvd-fs-video video { width: 100%; height: 100%; object-fit: cover
 	<div class="earth_word">
 		全球访客足迹 · 近 30 天
 	</div>
-	<span style="color:#9fd8ff">〇</span>&nbsp 越早越暗 &nbsp→&nbsp <span style="color:#fff">〇</span>&nbsp 越新越亮 &nbsp&nbsp <span style="color:#fff">◎</span>&nbsp 当前访客(你) &nbsp&nbsp 拖动旋转 · 滚轮缩放
+	<span style="color:#9fd8ff">〇</span>&nbsp 越早越暗 &nbsp→&nbsp <span style="color:#fff">〇</span>&nbsp 越新越亮 &nbsp&nbsp <span style="color:#ffd166">◎</span>&nbsp 当前访客(你) &nbsp&nbsp 拖动旋转 · 滚轮缩放
 </div>
 
 <div id='fatherobj3'>
@@ -116,14 +115,12 @@ document.addEventListener("DOMContentLoaded", function () {
   document.body.classList.add('earth-fs');
   var header_obj = document.getElementsByClassName('header-inner')[0];
   if (header_obj) header_obj.style.display = 'none';
-  var nav_obj = document.querySelector('.navbar');
-  if (nav_obj) nav_obj.style.display = 'none';
   var footer_obj = document.querySelector('.footer-inner');
   if (footer_obj) footer_obj.style.display = 'none';
   var temp_board_obj = document.getElementById('board');
   if (temp_board_obj) temp_board_obj.style.cssText = 'background-color: transparent; box-shadow: none; width: 100%; padding: 0;';
   var real_mask_obj = document.getElementsByClassName('real_mask')[0];
-  if (real_mask_obj) real_mask_obj.style.cssText = 'background-color: rgba(0,0,0,0.58); z-index: -779; height: 100%; position: fixed; width: 100%;';
+  if (real_mask_obj) real_mask_obj.style.cssText = 'background-color: rgba(0,0,0,0.62); z-index: -779; height: 100%; position: fixed; width: 100%;';
 
   var body_height = window.innerHeight;
   var body_width = window.innerWidth;
@@ -163,15 +160,15 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.save();
       ctx.beginPath();
       ctx.arc(pt[0], pt[1], 4, 0, 2 * Math.PI);
-      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.fillStyle = 'rgba(255,209,102,0.95)';
       ctx.fill();
       ctx.lineWidth = 2.5;
-      ctx.strokeStyle = 'rgba(255,255,255,' + (0.55 + 0.45 * pulse) + ')';
+      ctx.strokeStyle = 'rgba(255,209,102,' + (0.55 + 0.45 * pulse) + ')';
       ctx.stroke();
       ctx.beginPath();
       ctx.arc(pt[0], pt[1], 4 + 3 + 3 * pulse, 0, 2 * Math.PI);
       ctx.lineWidth = 1.5;
-      ctx.strokeStyle = 'rgba(255,255,255,' + (0.55 - 0.45 * pulse) + ')';
+      ctx.strokeStyle = 'rgba(255,209,102,' + (0.55 - 0.45 * pulse) + ')';
       ctx.stroke();
       ctx.restore();
     });
