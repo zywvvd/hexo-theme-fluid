@@ -237,7 +237,13 @@ document.addEventListener("DOMContentLoaded", function () {
         v.muted = true; v.loop = true; v.autoplay = true;
         v.setAttribute('playsinline', '');
         document.getElementById('vvd-fs-video').appendChild(v);
-        var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+        var pr = v.play();
+        if (pr && pr.catch) pr.catch(function () {
+          document.addEventListener('click', function once() {
+            v.play();
+            document.removeEventListener('click', once);
+          });
+        });
       })
       .catch(function () {});
   })();
@@ -349,6 +355,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   });
                   for (var i = 0; i < toPing.length; i++) {
                     var ping = toPing[i];
+                    var rec = (ping.time - start) / Math.max(1, end - start);
                     planet.plugins.pings.add(ping.lng, ping.lat, {
                       angle: 1.6,
                       color: colors(rec),
