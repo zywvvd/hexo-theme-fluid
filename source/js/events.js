@@ -181,14 +181,16 @@ Fluid.events = {
 
     var notLazyImages = jQuery('main img:not([lazyload])');
     var total = notLazyImages.length;
-    for (const img of notLazyImages) {
+    // 老版 jQuery 对象无 Symbol.iterator，for...of 会抛 "not iterable"——用 .each()
+    notLazyImages.each(function() {
+      const img = this;
       const old = img.onload;
       img.onload = function() {
         old && old();
         window.NProgress && window.NProgress.status !== null && window.NProgress.inc(0.5 / total);
       };
       if (img.complete) { img.onload(); }
-    }
+    });
   },
 
   registerRefreshCallback: function(callback) {
