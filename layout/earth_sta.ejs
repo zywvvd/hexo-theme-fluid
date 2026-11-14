@@ -63,12 +63,16 @@ page.comment = 'waline'
 body.earth-fs .navbar { display: none !important; }
 body.earth-fs .banner { display: none !important; }
 body.earth-fs .footer-inner { display: none !important; }
-body.earth-fs #fatherobj3 { position: fixed; inset: 0; z-index: -700; }
-body.earth-fs .earth_title { position: fixed; top: 2vh; left: 0; right: 0; z-index: 20; height: auto; }
+body.earth-fs #fatherobj3 { position: fixed; inset: 0; z-index: 1; }
+body.earth-fs .earth_title { position: fixed; top: 2vh; left: 0; right: 0; z-index: 20; height: auto; pointer-events: none; }
 body.earth-fs .vvd-fs-spacer { height: 100vh; }
 .vvd-fs-comments { position: relative; z-index: 30; background: rgba(4,12,24,0.78); padding: 20px 0 40px; margin-top: 16px; }
 .vvd-fs-comments-inner { max-width: 720px; margin: 0 auto; padding: 0 16px; color: #dcecff; }
 #vvd-planet-stats .vps-me { margin: -6px 0 10px; color: #ff6b60; font-size: 12px; }
+body.earth-fs #vvd-fs-video { position: fixed; inset: 0; z-index: -776; pointer-events: none; }
+body.earth-fs #vvd-fs-video video { width: 100%; height: 100%; object-fit: cover; }
+body.earth-fs #vvd-fs-jump { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 20; }
+body.earth-fs #vvd-fs-jump a { color: #9fd8ff; border: 1px solid rgba(80,160,255,0.35); background: rgba(8,20,38,0.55); padding: 6px 14px; border-radius: 16px; text-decoration: none; font-size: 13px; }
 </style>
 
 
@@ -99,6 +103,9 @@ body.earth-fs .vvd-fs-spacer { height: 100vh; }
 </div>
 <canvas id="vvd-starfield"></canvas>
 
+<div id="vvd-fs-video"></div>
+<div id="vvd-fs-jump"><a href="#vvd-fs-comments">⬇ 评论区</a></div>
+
 <div class="vvd-fs-spacer"></div>
 <div class="vvd-fs-comments">
   <div class="vvd-fs-comments-inner">
@@ -127,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var temp_board_obj = document.getElementById('board');
   if (temp_board_obj) temp_board_obj.style.cssText = 'background-color: transparent; box-shadow: none; width: 100%; padding: 0;';
   var real_mask_obj = document.getElementsByClassName('real_mask')[0];
-  if (real_mask_obj) real_mask_obj.style.cssText = 'background-color: rgba(0,0,0,0.8); z-index: -777; height: 100%; position: fixed; width: 100%;';
+  if (real_mask_obj) real_mask_obj.style.cssText = 'background-color: rgba(0,0,0,0.45); z-index: -779; height: 100%; position: fixed; width: 100%;';
 
   var body_height = window.innerHeight;
   var body_width = window.innerWidth;
@@ -228,6 +235,29 @@ document.addEventListener("DOMContentLoaded", function () {
       requestAnimationFrame(twinkle);
     })();
   })();
+  // 全屏背景视频(桌面且未开启减动效才启用)
+  (function () {
+    var skip = matchMedia('(prefers-reduced-motion: reduce)').matches || matchMedia('(pointer: coarse)').matches;
+    if (skip) return;
+    fetch('https://pvuv.zywvvd.com:61213/wallpaper-pair')
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(0); })
+      .then(function (pairs) {
+        var pair = pairs[Math.floor(Math.random() * pairs.length)];
+        var v = document.createElement('video');
+        v.src = pair[0]; v.poster = pair[1];
+        v.muted = true; v.loop = true; v.autoplay = true;
+        v.setAttribute('playsinline', '');
+        document.getElementById('vvd-fs-video').appendChild(v);
+        var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+      })
+      .catch(function () {});
+  })();
+  var jump = document.querySelector('#vvd-fs-jump a');
+  if (jump) jump.addEventListener('click', function (e) {
+    e.preventDefault();
+    var cm = document.querySelector('.vvd-fs-comments');
+    if (cm) cm.scrollIntoView({ behavior: 'smooth' });
+  });
   // 访客足迹统计面板(静默失败不影响地球)
   fetch('https://pvuv.zywvvd.com:61213/planet_stats')
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
@@ -278,9 +308,9 @@ document.addEventListener("DOMContentLoaded", function () {
               var recency = d3.scale.linear().domain([0, data.length]).range([0, 1]);
               var colors = d3.scale.linear()
                 .domain([0, 0.6, 1])
-                .range(['rgba(43,123,255,0.35)', 'rgba(57,208,255,0.40)', 'rgba(255,255,255,0.55)']);
-              var angles = d3.scale.linear().domain([0, 1]).range([1.5, 5]);
-              var ttls = d3.scale.linear().domain([0, 1]).range([1600, 2600]);
+                .range(['#244f8f', '#2e86c8', '#a8d8ff']);
+              var angles = d3.scale.linear().domain([0, 1]).range([1.2, 3.5]);
+              var ttls = d3.scale.linear().domain([0, 1]).range([1500, 2200]);
                 var start = parseInt(data[0].time, 10);
                 var end = parseInt(data[data.length - 1].time, 10);
                 var currentTime = start;
@@ -338,7 +368,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   for (var i = 0; i < toPing.length; i++) {
                     var ping = toPing[i];
                     var rec = (ping.time - start) / Math.max(1, end - start);
-                    planet.plugins.pings.add(ping.lng, ping.lat, {
+                    planet.plugins.pings.add(ping.lat, ping.lng, {
                       angle: angles(rec),
                       color: colors(rec),
                       ttl:   ttls(rec)
@@ -354,7 +384,7 @@ document.addEventListener("DOMContentLoaded", function () {
               if (mePoints.length) {
                 var me = mePoints[0];
                 var addMe = function () {
-                  planet.plugins.pings.add(me.lng, me.lat, { angle: 8, color: '#ff3b30', ttl: 4600 });
+                  planet.plugins.pings.add(me.lat, me.lng, { angle: 9, color: '#ff3b30', ttl: 5000 });
                 };
                 addMe();
                 setInterval(addMe, 2600);
