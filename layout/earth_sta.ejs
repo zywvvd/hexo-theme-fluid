@@ -65,14 +65,9 @@ body.earth-fs .banner { display: none !important; }
 body.earth-fs .footer-inner { display: none !important; }
 body.earth-fs #fatherobj3 { position: fixed; inset: 0; z-index: 1; }
 body.earth-fs .earth_title { position: fixed; top: 2vh; left: 0; right: 0; z-index: 20; height: auto; pointer-events: none; }
-body.earth-fs .vvd-fs-spacer { height: 100vh; }
-.vvd-fs-comments { position: relative; z-index: 30; background: rgba(4,12,24,0.78); padding: 20px 0 40px; margin-top: 16px; }
-.vvd-fs-comments-inner { max-width: 720px; margin: 0 auto; padding: 0 16px; color: #dcecff; }
 #vvd-planet-stats .vps-me { margin: -6px 0 10px; color: #ff6b60; font-size: 12px; }
 body.earth-fs #vvd-fs-video { position: fixed; inset: 0; z-index: -776; pointer-events: none; }
 body.earth-fs #vvd-fs-video video { width: 100%; height: 100%; object-fit: cover; }
-body.earth-fs #vvd-fs-jump { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 20; }
-body.earth-fs #vvd-fs-jump a { color: #9fd8ff; border: 1px solid rgba(80,160,255,0.35); background: rgba(8,20,38,0.55); padding: 6px 14px; border-radius: 16px; text-decoration: none; font-size: 13px; }
 </style>
 
 
@@ -104,14 +99,8 @@ body.earth-fs #vvd-fs-jump a { color: #9fd8ff; border: 1px solid rgba(80,160,255
 <canvas id="vvd-starfield"></canvas>
 
 <div id="vvd-fs-video"></div>
-<div id="vvd-fs-jump"><a href="#vvd-fs-comments">⬇ 评论区</a></div>
 
-<div class="vvd-fs-spacer"></div>
-<div class="vvd-fs-comments">
-  <div class="vvd-fs-comments-inner">
-<%- partial('_partials/comments/waline') %>
-  </div>
-</div>
+
 
 <script defer type='text/javascript' src='https://img.zywvvd.com:61213/HexoFiles/js/planetaryjs/d3.v3.min.js'></script>
 <script defer type='text/javascript' src='https://img.zywvvd.com:61213/HexoFiles/js/planetaryjs/topojson.v1.min.js'></script>
@@ -252,12 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch(function () {});
   })();
-  var jump = document.querySelector('#vvd-fs-jump a');
-  if (jump) jump.addEventListener('click', function (e) {
-    e.preventDefault();
-    var cm = document.querySelector('.vvd-fs-comments');
-    if (cm) cm.scrollIntoView({ behavior: 'smooth' });
-  });
   // 访客足迹统计面板(静默失败不影响地球)
   fetch('https://pvuv.zywvvd.com:61213/planet_stats')
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
@@ -368,7 +351,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   for (var i = 0; i < toPing.length; i++) {
                     var ping = toPing[i];
                     var rec = (ping.time - start) / Math.max(1, end - start);
-                    planet.plugins.pings.add(ping.lat, ping.lng, {
+                    planet.plugins.pings.add(ping.lng, ping.lat, {
                       angle: angles(rec),
                       color: colors(rec),
                       ttl:   ttls(rec)
@@ -384,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
               if (mePoints.length) {
                 var me = mePoints[0];
                 var addMe = function () {
-                  planet.plugins.pings.add(me.lat, me.lng, { angle: 9, color: '#ff3b30', ttl: 5000 });
+                  planet.plugins.pings.add(me.lng, me.lat, { angle: 9, color: '#ff3b30', ttl: 5000 });
                 };
                 addMe();
                 setInterval(addMe, 2600);
