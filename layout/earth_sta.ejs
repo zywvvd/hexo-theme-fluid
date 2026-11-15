@@ -421,13 +421,16 @@ document.addEventListener("DOMContentLoaded", function () {
     var globe = null;
     var resize = function() {
       var width  = board_obj.offsetWidth;
-      //var height = board_obj.offsetWidth;
-	  //var width  = body_width;
       var height = body_height;
-  
-      globe.canvas.width = width;
-      globe.canvas.height = height;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      // 高清屏: 背面存储按 DPR 放大, CSS 尺寸保持逻辑像素(视网膜屏不再发虚)
+      globe.canvas.width = Math.round(width * dpr);
+      globe.canvas.height = Math.round(height * dpr);
+      globe.canvas.style.width = width + 'px';
+      globe.canvas.style.height = height + 'px';
       globe.projection.translate([width / 2, height / 2]);
+      globe.context.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     return function(planet) {
       globe = planet;
