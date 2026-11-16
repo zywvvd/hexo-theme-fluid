@@ -33,7 +33,8 @@
 
   function loadPagefind() {
     if (!pagefindLoading) {
-      pagefindLoading = import(pagefindBase + '/pagefind.js');
+      // 图床缓存头 max-age=10 年, pagefind.js 必须带版本参数强刷——升级 pagefind 时同步改这里
+      pagefindLoading = import(pagefindBase + '/pagefind.js?v=1.6.0');
     }
     return pagefindLoading;
   }
