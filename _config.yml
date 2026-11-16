@@ -864,7 +864,7 @@ waline:
   meta: ['nick', 'mail', 'link']
   requiredMeta: ['nick']
   lang: 'zh-CN'
-  emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo']
+  emoji: ['/lib/emojis/weibo']  # 自托管(npmmirror @waline/emojis@1.4.0 weibo 集)
   dark: 'html[data-user-color-scheme="dark"]'
   wordLimit: 0
   pageSize: 10
@@ -1140,7 +1140,7 @@ static_prefix:
 
   valine: https://lib.baomitu.com/valine/1.5.1/
 
-  waline: https://cdn.jsdelivr.net/npm/@waline/client@v3/dist/
+  waline: /lib/waline/  # 自托管 ESM(与 _config.fluid.yml 覆盖值一致)
 
   gitalk: https://lib.baomitu.com/gitalk/1.8.0/
 
